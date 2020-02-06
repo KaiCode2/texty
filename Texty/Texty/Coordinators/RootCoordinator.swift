@@ -30,13 +30,19 @@ internal final class RootCoordinator {
 
 private extension RootCoordinator {
     func navigateToHome() {
-        let homeVC = HomeViewController(delegate: self)
+        let homeVC = HomeWireframe(delegate: self).viewController
         navigationController.pushViewController(homeVC, animated: false)
     }
 }
 
 extension RootCoordinator: HomeDelegate {
+    func didRequestLibraryScan() {
 
+    }
+
+    func didRequestCameraScan() {
+        
+    }
 }
 
 extension RootCoordinator: DismissableDelegate {

@@ -11,23 +11,20 @@ import Vision
 import VisionKit
 import AVFoundation
 
-protocol HomeDelegate {
-    
-}
-
 class HomeViewController: UIViewController {
-    private let delegate: HomeDelegate
-    var textRecognitionRequest = VNRecognizeTextRequest()
-    var pageString: String = ""
+    private let presenter: HomePresenter
 
-    init(delegate: HomeDelegate) {
-        self.delegate = delegate
+    init(presenter: HomePresenter) {
+        self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    var textRecognitionRequest = VNRecognizeTextRequest()
+    var pageString: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
