@@ -66,38 +66,6 @@
             endingLineNumber = "38"
             landmarkName = "viewDidLoad()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "90BF4FFC-E10A-4FF4-B697-FB9F4F05AA04 - ee5529ec656a3d86"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.VNRequest, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Texty.HomeViewController.viewDidLoad() -&gt; ()"
-                  moduleName = "Texty"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kaialdag/Desktop/Developer/texty/texty/Texty/Texty/HomeViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "36"
-                  endingLineNumber = "36"
-                  offsetFromSymbolStart = "844">
-               </Location>
-               <Location
-                  uuid = "90BF4FFC-E10A-4FF4-B697-FB9F4F05AA04 - c65261230da27004"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in closure #1 (__C.VNRequest, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Texty.HomeViewController.viewDidLoad() -&gt; ()"
-                  moduleName = "Texty"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/kaialdag/Desktop/Developer/texty/texty/Texty/Texty/HomeViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "37"
-                  endingLineNumber = "37"
-                  offsetFromSymbolStart = "48">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

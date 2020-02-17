@@ -14,4 +14,8 @@ internal final class HomePresenter {
     init(delegate: HomeDelegate) {
         self.moduleDelegate = delegate
     }
+
+    func didRequestAdd() {
+
+    }
 }
