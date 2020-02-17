@@ -7,15 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC16C1B523FAAC1700C1EF40 /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC16C1B423FAAC1700C1EF40 /* DocumentScannerView.swift */; };
 		AC31DFE922AA45F7009E4FA5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC31DFE822AA45F7009E4FA5 /* AppDelegate.swift */; };
-		AC31DFEB22AA45F7009E4FA5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC31DFEA22AA45F7009E4FA5 /* HomeViewController.swift */; };
 		AC31DFF022AA45F9009E4FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC31DFEF22AA45F9009E4FA5 /* Assets.xcassets */; };
 		AC31DFF322AA45F9009E4FA5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC31DFF122AA45F9009E4FA5 /* LaunchScreen.storyboard */; };
 		AC8C441323FA467300CACE77 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8C441223FA467300CACE77 /* HomeView.swift */; };
 		AC8C441723FA4ECA00CACE77 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8C441623FA4ECA00CACE77 /* SceneDelegate.swift */; };
 		AC8F555323EAAFB100B62613 /* PersistenceInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F555223EAAFB100B62613 /* PersistenceInteractor.swift */; };
-		AC8F555823EBAEC200B62613 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F555723EBAEC200B62613 /* EditDocumentViewController.swift */; };
-		AC8F555A23EBAECE00B62613 /* EditDocumentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC8F555923EBAECE00B62613 /* EditDocumentViewController.xib */; };
 		AC8F555D23EBB06800B62613 /* EditDocumentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F555C23EBB06800B62613 /* EditDocumentPresenter.swift */; };
 		AC8F555F23EBB0B500B62613 /* EditDocumentWireframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F555E23EBB0B500B62613 /* EditDocumentWireframe.swift */; };
 		AC8F556123EBB1F000B62613 /* HomePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F556023EBB1F000B62613 /* HomePresenter.swift */; };
@@ -26,17 +24,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AC16C1B423FAAC1700C1EF40 /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
 		AC31DFE522AA45F7009E4FA5 /* Texty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Texty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC31DFE822AA45F7009E4FA5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		AC31DFEA22AA45F7009E4FA5 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		AC31DFEF22AA45F9009E4FA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC31DFF222AA45F9009E4FA5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC31DFF422AA45F9009E4FA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC8C441223FA467300CACE77 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		AC8C441623FA4ECA00CACE77 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		AC8F555223EAAFB100B62613 /* PersistenceInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceInteractor.swift; sourceTree = "<group>"; };
-		AC8F555723EBAEC200B62613 /* EditDocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentViewController.swift; sourceTree = "<group>"; };
-		AC8F555923EBAECE00B62613 /* EditDocumentViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditDocumentViewController.xib; sourceTree = "<group>"; };
 		AC8F555C23EBB06800B62613 /* EditDocumentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentPresenter.swift; sourceTree = "<group>"; };
 		AC8F555E23EBB0B500B62613 /* EditDocumentWireframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentWireframe.swift; sourceTree = "<group>"; };
 		AC8F556023EBB1F000B62613 /* HomePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePresenter.swift; sourceTree = "<group>"; };
@@ -57,6 +53,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC16C1B323FAABF300C1EF40 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AC16C1B423FAAC1700C1EF40 /* DocumentScannerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		AC31DFDC22AA45F7009E4FA5 = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +80,7 @@
 		AC31DFE722AA45F7009E4FA5 /* Texty */ = {
 			isa = PBXGroup;
 			children = (
+				AC16C1B323FAABF300C1EF40 /* Views */,
 				AC8F556423EBB40500B62613 /* Coordinators */,
 				AC8F555423EBAE7900B62613 /* Modules */,
 				AC8F556623EBB41D00B62613 /* Interactors */,
@@ -100,7 +105,6 @@
 			children = (
 				AC8F556223EBB1FC00B62613 /* HomeWireframe.swift */,
 				AC8F556023EBB1F000B62613 /* HomePresenter.swift */,
-				AC31DFEA22AA45F7009E4FA5 /* HomeViewController.swift */,
 				AC8C441223FA467300CACE77 /* HomeView.swift */,
 			);
 			path = Home;
@@ -111,8 +115,6 @@
 			children = (
 				AC8F555E23EBB0B500B62613 /* EditDocumentWireframe.swift */,
 				AC8F555C23EBB06800B62613 /* EditDocumentPresenter.swift */,
-				AC8F555723EBAEC200B62613 /* EditDocumentViewController.swift */,
-				AC8F555923EBAECE00B62613 /* EditDocumentViewController.xib */,
 			);
 			path = "Edit Document";
 			sourceTree = "<group>";
@@ -221,7 +223,6 @@
 			files = (
 				AC31DFF322AA45F9009E4FA5 /* LaunchScreen.storyboard in Resources */,
 				AC31DFF022AA45F9009E4FA5 /* Assets.xcassets in Resources */,
-				AC8F555A23EBAECE00B62613 /* EditDocumentViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,15 +234,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC8F555F23EBB0B500B62613 /* EditDocumentWireframe.swift in Sources */,
-				AC8F555823EBAEC200B62613 /* EditDocumentViewController.swift in Sources */,
 				ACB9C59223E8C63B00BEB6A2 /* CameraDocumentInteractor.swift in Sources */,
 				AC8F556123EBB1F000B62613 /* HomePresenter.swift in Sources */,
-				AC31DFEB22AA45F7009E4FA5 /* HomeViewController.swift in Sources */,
 				AC8F555D23EBB06800B62613 /* EditDocumentPresenter.swift in Sources */,
 				AC8F555323EAAFB100B62613 /* PersistenceInteractor.swift in Sources */,
 				ACB9C58A23E2965800BEB6A2 /* RootCoordinator.swift in Sources */,
 				AC8C441723FA4ECA00CACE77 /* SceneDelegate.swift in Sources */,
 				AC31DFE922AA45F7009E4FA5 /* AppDelegate.swift in Sources */,
+				AC16C1B523FAAC1700C1EF40 /* DocumentScannerView.swift in Sources */,
 				AC8C441323FA467300CACE77 /* HomeView.swift in Sources */,
 				ACB9C59423E8C6C200BEB6A2 /* Document.swift in Sources */,
 				AC8F556323EBB1FC00B62613 /* HomeWireframe.swift in Sources */,

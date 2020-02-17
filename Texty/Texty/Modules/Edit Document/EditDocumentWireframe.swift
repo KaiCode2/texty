@@ -20,8 +20,5 @@ internal final class EditDocumentWireframe {
         self.moduleDelegate = delegate
     }
 
-    var viewController: EditDocumentViewController {
-        let presenter = EditDocumentPresenter(delegate: moduleDelegate)
-        return EditDocumentViewController(presenter: presenter)
-    }
+    
 }
