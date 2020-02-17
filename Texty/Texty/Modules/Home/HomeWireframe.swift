@@ -6,7 +6,7 @@
 //  Copyright © 2020 Kai Aldag. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 protocol HomeDelegate {
     func didRequestCameraScan()
@@ -20,8 +20,12 @@ internal final class HomeWireframe {
         self.moduleDelegate = delegate
     }
 
-    var viewController: HomeViewController {
-        let presenter = HomePresenter(delegate: moduleDelegate)
-        return HomeViewController(presenter: presenter)
+    var view: HomeView {
+        let cameraInteractor = CameraDocumentInteractor(delegate: nil)
+        var presenter = HomePresenter(delegate: moduleDelegate, cameraInteractor: cameraInteractor)
+        cameraInteractor.delegate = presenter
+        let view = HomeView(presenter: presenter)
+        presenter.view = view
+        return view
     }
 }

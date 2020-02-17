@@ -13,6 +13,8 @@ struct Document {
         let pageNumber: Int?
         let pageContent: String
         let images: [CGImage]?
+
+//        let lines: [String]
     }
     struct DocumentMetaData {
         let title: String
@@ -24,16 +26,9 @@ struct Document {
     let metaData: DocumentMetaData?
 
     var aggragatedText: String {
-//        self.pages.reduce("") { (aggregatedText, nexLine) -> String in
-//            if nexLine.last == "-" {
-//                self.document.add(pageString: nexLine)
-//            } else {
-//                self.document.add(pageString: line + " ")
-//            }
-//            if nexLine.pageContenten
-//            aggregatedText + " " + nextPage.pageContent
-//        }
-        return "hello world"
+        return self.pages.reduce("") { (aggregatedText, nextPage) -> String in
+            return aggregatedText + " " + nextPage.pageContent
+        }
     }
 
     mutating func add(pageString: String, number: Int? = nil) {

@@ -10,14 +10,14 @@ import Vision
 import VisionKit
 
 protocol CameraDocumentInteractorDelegate {
-    func didFinish(withDocument: Document)
+    func didFinish(withDocument document: Document)
 }
 
 internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewControllerDelegate {
-    let delegate: CameraDocumentInteractorDelegate
+    var delegate: CameraDocumentInteractorDelegate?
     private var document: Document
 
-    init(delegate: CameraDocumentInteractorDelegate, document: Document? = nil) {
+    init(delegate: CameraDocumentInteractorDelegate?, document: Document? = nil) {
         self.delegate = delegate
         self.document = document ?? Document(pages: [], metaData: nil)
     }
@@ -35,6 +35,7 @@ internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewCon
                             self.document.add(pageString: line + " ")
                         }
                     }
+                    self.delegate?.didFinish(withDocument: self.document)
                 }
             }
         })
