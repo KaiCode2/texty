@@ -10,16 +10,20 @@ import VisionKit
 import SwiftUI
 import AVFoundation
 
-protocol HomePresenterType {
+protocol HomeViewSupplierType {
     func scanView() -> DocumentScannerView
 }
 
-internal struct HomePresenter: HomePresenterType {
+protocol HomePresenterType: ObservableObject {
+    var documents: [Document] { get set }
+}
+
+internal class HomePresenter: HomePresenterType, HomeViewSupplierType {
     private let moduleDelegate: HomeDelegate
 
     private let cameraInteractor: CameraDocumentInteractor
 
-    private var documents: [Document] = []
+    @Published var documents: [Document] = []
 
     var view: HomeView? = nil
 
@@ -27,6 +31,7 @@ internal struct HomePresenter: HomePresenterType {
     init(delegate: HomeDelegate, cameraInteractor: CameraDocumentInteractor) {
         self.moduleDelegate = delegate
         self.cameraInteractor = cameraInteractor
+
     }
 
     func scanView() -> DocumentScannerView {
@@ -37,6 +42,7 @@ internal struct HomePresenter: HomePresenterType {
 
 extension HomePresenter: CameraDocumentInteractorDelegate {
     func didFinish(withDocument document: Document) {
+        documents.append(document)
         let utterance = AVSpeechUtterance(string: document.aggragatedText)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
         utterance.rate = 0.6

@@ -9,26 +9,55 @@
 import SwiftUI
 
 internal struct HomeView: View {
-    private let presenter: HomePresenterType
+    typealias PresenterType = HomePresenter //Any<HomePresenterType, HomeViewSupplier>
+    private var viewPresenter: HomeViewSupplierType
 
-    @State var isShowingScan = false
+    @ObservedObject var viewModel: HomeViewModel<PresenterType>
+    @State fileprivate var isShowingScan = false
 
-    init(presenter: HomePresenterType) {
-        self.presenter = presenter
+    init(presenter: PresenterType) {
+        self.viewPresenter = presenter
+        viewModel = HomeViewModel<PresenterType>(presenter: presenter)
     }
 
-//    @State var model: HomePresenter.Model
+//    init<PresentType: HomePresenterType>(viewSupplier: HomeViewSupplierType, presenter: PresentType){
+//
+//    }
 
-     var body: some View {
-        Button(action: {
-            self.isShowingScan = true
-        }) {
-            return Text("Add")
-        }.sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
-            return self.presenter.scanView()
+    var body: some View {
+        NavigationView {
+            List(self.viewModel.documents) { document in
+                NavigationLink(destination: DocumentDetailView(document: document)) {
+                    DocumentRowView(document: document)
+                }
+            }
+            .navigationBarTitle(Text(NSLocalizedString("Documents", comment: "Documents")))
+            .navigationBarItems(trailing: Button(action: {
+                self.isShowingScan = true
+            }) {
+                return Image(systemName: "plus.circle")
+            })
         }
-    }
+        .sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
+            return self.viewPresenter.scanView()
+        }
 
+    }
+}
+
+extension HomeView {
+    class HomeViewModel<PresenterType: HomePresenterType>: ObservableObject {
+        @ObservedObject private var presenter: PresenterType
+
+        @Published private(set) var documents: [Document] = []
+
+        init(presenter: PresenterType) {
+            self.presenter = presenter
+            documents = presenter.$documents
+//            presenter.objectWillChange.subscribe(presenter.documents)
+        }
+
+    }
 }
 
 #if DEBUG

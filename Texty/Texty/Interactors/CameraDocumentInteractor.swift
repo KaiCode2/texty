@@ -19,7 +19,7 @@ internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewCon
 
     init(delegate: CameraDocumentInteractorDelegate?, document: Document? = nil) {
         self.delegate = delegate
-        self.document = document ?? Document(pages: [], metaData: nil)
+        self.document = document ?? Document(pages: [], metaData: Document.DocumentMetaData.empty())
     }
 
     private var textRecognitionRequest: VNRecognizeTextRequest {
@@ -51,12 +51,6 @@ internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewCon
                             for pageNumber in 0 ..< scan.pageCount {
                                 let image = scan.imageOfPage(at: pageNumber)
                                 self.processImage(image: image)
-                            }
-                            DispatchQueue.main.async {
-            //                    if let resultsVC = self.resultsViewController {
-            //                        self.navigationController?.pushViewController(resultsVC, animated: true)
-            //                    }
-        //                        self.activityIndicator.stopAnimating()
                             }
                         }
                     }

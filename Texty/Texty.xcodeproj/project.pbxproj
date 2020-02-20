@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC08436D23FCC8A600FF80D2 /* DocumentRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC08436C23FCC8A600FF80D2 /* DocumentRowView.swift */; };
+		AC08436F23FCCDE100FF80D2 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC08436E23FCCDE100FF80D2 /* DocumentDetailView.swift */; };
 		AC16C1B523FAAC1700C1EF40 /* DocumentScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC16C1B423FAAC1700C1EF40 /* DocumentScannerView.swift */; };
 		AC31DFE922AA45F7009E4FA5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC31DFE822AA45F7009E4FA5 /* AppDelegate.swift */; };
 		AC31DFF022AA45F9009E4FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC31DFEF22AA45F9009E4FA5 /* Assets.xcassets */; };
@@ -24,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AC08436C23FCC8A600FF80D2 /* DocumentRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentRowView.swift; sourceTree = "<group>"; };
+		AC08436E23FCCDE100FF80D2 /* DocumentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentDetailView.swift; sourceTree = "<group>"; };
 		AC16C1B423FAAC1700C1EF40 /* DocumentScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerView.swift; sourceTree = "<group>"; };
 		AC31DFE522AA45F7009E4FA5 /* Texty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Texty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC31DFE822AA45F7009E4FA5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -53,10 +57,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AC08436B23FCC89400FF80D2 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				AC08436C23FCC8A600FF80D2 /* DocumentRowView.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
 		AC16C1B323FAABF300C1EF40 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				AC16C1B423FAAC1700C1EF40 /* DocumentScannerView.swift */,
+				AC08436E23FCCDE100FF80D2 /* DocumentDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -106,6 +119,7 @@
 				AC8F556223EBB1FC00B62613 /* HomeWireframe.swift */,
 				AC8F556023EBB1F000B62613 /* HomePresenter.swift */,
 				AC8C441223FA467300CACE77 /* HomeView.swift */,
+				AC08436B23FCC89400FF80D2 /* Subviews */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -237,11 +251,13 @@
 				ACB9C59223E8C63B00BEB6A2 /* CameraDocumentInteractor.swift in Sources */,
 				AC8F556123EBB1F000B62613 /* HomePresenter.swift in Sources */,
 				AC8F555D23EBB06800B62613 /* EditDocumentPresenter.swift in Sources */,
+				AC08436F23FCCDE100FF80D2 /* DocumentDetailView.swift in Sources */,
 				AC8F555323EAAFB100B62613 /* PersistenceInteractor.swift in Sources */,
 				ACB9C58A23E2965800BEB6A2 /* RootCoordinator.swift in Sources */,
 				AC8C441723FA4ECA00CACE77 /* SceneDelegate.swift in Sources */,
 				AC31DFE922AA45F7009E4FA5 /* AppDelegate.swift in Sources */,
 				AC16C1B523FAAC1700C1EF40 /* DocumentScannerView.swift in Sources */,
+				AC08436D23FCC8A600FF80D2 /* DocumentRowView.swift in Sources */,
 				AC8C441323FA467300CACE77 /* HomeView.swift in Sources */,
 				ACB9C59423E8C6C200BEB6A2 /* Document.swift in Sources */,
 				AC8F556323EBB1FC00B62613 /* HomeWireframe.swift in Sources */,
