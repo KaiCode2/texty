@@ -20,12 +20,11 @@ internal final class HomeWireframe {
         self.moduleDelegate = delegate
     }
 
-    var view: HomeView {
+    var view: some View {
         let cameraInteractor = CameraDocumentInteractor(delegate: nil)
-        var presenter = HomePresenter(delegate: moduleDelegate, cameraInteractor: cameraInteractor)
+        let presenter = HomePresenter(delegate: moduleDelegate, cameraInteractor: cameraInteractor)
         cameraInteractor.delegate = presenter
         let view = HomeView(presenter: presenter)
-        presenter.view = view
         return view
     }
 }

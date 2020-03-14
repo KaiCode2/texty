@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftUI
+import CoreData
 
 internal protocol DismissableDelegate {
     func didRequestDismissal()

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DocumentDetailView: View {
-    var document: Document
+    var document: Document.MetaData
 
     var body: some View {
         Text("Hello World")

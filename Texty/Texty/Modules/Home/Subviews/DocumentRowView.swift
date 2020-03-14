@@ -9,15 +9,24 @@
 import SwiftUI
 
 struct DocumentRowView: View {
-    var document: Document
+    private var documentMetadata: Document.MetaData
+
+    init(metadata: Document.MetaData) {
+        self.documentMetadata = metadata
+    }
 
     var body: some View {
         HStack {
-//            (document.metaData?.coverImage ?? Image(systemName: "doc"))
-//                .resizable()
-//                .frame(width: CGFloat(50), height: CGFloat(50), alignment: .leading)
-//            Text(document.metaData?.title)
-            Text("hello world")
+            (documentMetadata.coverImage ?? Image(systemName: "doc"))
+                .resizable()
+                .frame(width: 50, height: 50)
+            VStack {
+                Text(documentMetadata.title ?? "Untitled Document")
+                Text(DateFormatter.localizedString(from: documentMetadata.releaseDate ?? Date(),
+                                                   dateStyle: .medium,
+                                                   timeStyle: .short))
+            }
+
             Spacer()
         }
     }

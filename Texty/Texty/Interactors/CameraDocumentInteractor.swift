@@ -19,7 +19,7 @@ internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewCon
 
     init(delegate: CameraDocumentInteractorDelegate?, document: Document? = nil) {
         self.delegate = delegate
-        self.document = document ?? Document(pages: [], metaData: Document.DocumentMetaData.empty())
+        self.document = document ?? Document(pages: [], metaData: Document.MetaData.empty())
     }
 
     private var textRecognitionRequest: VNRecognizeTextRequest {

@@ -12,23 +12,20 @@ internal struct HomeView: View {
     typealias PresenterType = HomePresenter //Any<HomePresenterType, HomeViewSupplier>
     private var viewPresenter: HomeViewSupplierType
 
-    @ObservedObject var viewModel: HomeViewModel<PresenterType>
+    @State var viewModel: HomeViewModel
+    
     @State fileprivate var isShowingScan = false
 
     init(presenter: PresenterType) {
         self.viewPresenter = presenter
-        viewModel = HomeViewModel<PresenterType>(presenter: presenter)
+        self._viewModel = State(wrappedValue: presenter.createViewModel())
     }
-
-//    init<PresentType: HomePresenterType>(viewSupplier: HomeViewSupplierType, presenter: PresentType){
-//
-//    }
 
     var body: some View {
         NavigationView {
-            List(self.viewModel.documents) { document in
+            List (self.viewModel.documentsMetadata) { document in
                 NavigationLink(destination: DocumentDetailView(document: document)) {
-                    DocumentRowView(document: document)
+                    DocumentRowView(metadata: document)
                 }
             }
             .navigationBarTitle(Text(NSLocalizedString("Documents", comment: "Documents")))
@@ -40,21 +37,6 @@ internal struct HomeView: View {
         }
         .sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
             return self.viewPresenter.scanView()
-        }
-
-    }
-}
-
-extension HomeView {
-    class HomeViewModel<PresenterType: HomePresenterType>: ObservableObject {
-        @ObservedObject private var presenter: PresenterType
-
-        @Published private(set) var documents: [Document] = []
-
-        init(presenter: PresenterType) {
-            self.presenter = presenter
-            documents = presenter.$documents
-//            presenter.objectWillChange.subscribe(presenter.documents)
         }
 
     }
