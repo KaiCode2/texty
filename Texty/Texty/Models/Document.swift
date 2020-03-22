@@ -8,7 +8,7 @@
 
 import SwiftUI
 import Combine
-import Foundation
+import TextyKit
 
 struct Document: Identifiable {
     var pages: [Page]
@@ -69,8 +69,7 @@ struct Document: Identifiable {
 
         static func fromDict(dict: [String: Any?]) throws -> MetaData {
             guard let id = dict[Document.propertyKey[0]] as? UUID else {
-                fatalError()
-                //                    throw LocalError.invalidInput
+                throw LocalError.invalidInput
             }
             let title = dict[Document.propertyKey[1]] as? String
             let author = dict[Document.propertyKey[2]] as? String
@@ -80,6 +79,12 @@ struct Document: Identifiable {
             let coverImage = dict[Document.propertyKey[5]] as? Image
 
             return MetaData(id: id, title: title, author: author, releaseDate: date, pageCount: pageCount, coverImage: coverImage)
+        }
+
+        func toDict() -> [String: Any] {
+            return Document.propertyKey.map { (key) -> (Dictionary<String, Any>).Element in
+                
+            }
         }
 
         static func == (lhs: MetaData, rhs: MetaData) -> Bool {
@@ -108,7 +113,7 @@ struct Document: Identifiable {
         "date",
         "pageCount",
         "coverImage",
-        "pagesIds",
+        "pagesIds", /// TODO: stop storing IDs and use core data relationships
     ]
 }
 

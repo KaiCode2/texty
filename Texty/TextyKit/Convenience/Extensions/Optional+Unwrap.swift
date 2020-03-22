@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Optional {
+public extension Optional {
     func unwrap() throws -> Wrapped {
         if case .some(let wrappedValue) = self {
             return wrappedValue

@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal enum LocalError: Error {
+public enum LocalError: Error {
     case invalidInput
     case unwrappedNil
 }

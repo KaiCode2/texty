@@ -6,7 +6,7 @@
 //  Copyright © 2020 Kai Aldag. All rights reserved.
 //
 
-import Foundation
+import TextyKit
 import CoreData
 
 struct PersistenceInteractor {
@@ -24,18 +24,13 @@ struct PersistenceInteractor {
     mutating func loadDocuments(completion: ([Document]) -> Void) {
         let managedContext = persistentContainer.viewContext
 
-        // 2
         let entity =
             NSEntityDescription.entity(forEntityName: Constants.DocumentObject,
                                      in: managedContext)!
 
-//        let documents = NSManagedObject(entity: entity,
-//                                        insertInto: managedContext)
-
         let fetchRequest =
           NSFetchRequest<NSManagedObject>(entityName: Constants.DocumentObject)
 
-        //3
         do {
             let documents = try managedContext.fetch(fetchRequest)
             completion(convertToDocuments(documents: documents))
@@ -43,16 +38,34 @@ struct PersistenceInteractor {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
 
-        // 3
 //        person.setValue(name, forKeyPath: "name")
 
-        // 4
 //        do {
 //          try managedContext.save()
 //          people.append(person)
 //        } catch let error as NSError {
 //          print("Could not save. \(error), \(error.userInfo)")
 //        }
+    }
+
+    mutating func save(document: Document) {
+        let managedContext = persistentContainer.viewContext
+
+        let entity =
+            NSEntityDescription.entity(forEntityName: Constants.DocumentObject,
+                                       in: managedContext)!
+
+        let documents = NSManagedObject(entity: entity,
+                                        insertInto: managedContext)
+
+        let dictDocument = document.toDict()
+
+        do {
+            try managedContext.save()
+            people.append(person)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
     }
 
     private func convertToDocuments(documents: [NSManagedObject]) -> [Document] {
