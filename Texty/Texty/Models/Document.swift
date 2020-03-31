@@ -82,9 +82,7 @@ struct Document: Identifiable {
         }
 
         func toDict() -> [String: Any] {
-            return Document.propertyKey.map { (key) -> (Dictionary<String, Any>).Element in
-                
-            }
+            return [:]
         }
 
         static func == (lhs: MetaData, rhs: MetaData) -> Bool {

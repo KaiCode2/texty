@@ -58,11 +58,11 @@ struct PersistenceInteractor {
         let documents = NSManagedObject(entity: entity,
                                         insertInto: managedContext)
 
-        let dictDocument = document.toDict()
+//        let dictDocument = document.toDict()
 
         do {
             try managedContext.save()
-            people.append(person)
+//            people.append(person)
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }

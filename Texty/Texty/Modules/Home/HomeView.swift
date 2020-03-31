@@ -12,20 +12,22 @@ internal struct HomeView: View {
     typealias PresenterType = HomePresenter //Any<HomePresenterType, HomeViewSupplier>
     private var viewPresenter: HomeViewSupplierType
 
-    @State var viewModel: HomeViewModel
+    @ObservedObject var viewModel: HomeViewModel
     
     @State fileprivate var isShowingScan = false
 
-    init(presenter: PresenterType) {
+    init(presenter: PresenterType, viewModel: HomeViewModel) {
         self.viewPresenter = presenter
-        self._viewModel = State(wrappedValue: presenter.createViewModel())
+        self.viewModel = viewModel
     }
 
     var body: some View {
         NavigationView {
-            List (self.viewModel.documentsMetadata) { document in
-                NavigationLink(destination: DocumentDetailView(document: document)) {
-                    DocumentRowView(metadata: document)
+            List {
+                ForEach(viewModel.documentsMetadata, id: \.id) { (document)  in
+                    NavigationLink(destination: DocumentDetailView(document: document)) {
+                        DocumentRowView(metadata: document)
+                    }
                 }
             }
             .navigationBarTitle(Text(NSLocalizedString("Documents", comment: "Documents")))
