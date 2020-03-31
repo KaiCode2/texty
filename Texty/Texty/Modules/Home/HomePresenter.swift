@@ -16,15 +16,18 @@ protocol HomeViewSupplierType {
     func scanView() -> DocumentScannerView
 }
 
-protocol HomePresenterType: ObservableObject {
-    func setAddDocumentCompletion(completion: @escaping (Document) -> Void)
+protocol HomePresenterType {
+    func loadDocuments()
 }
 
-internal class HomePresenter: HomePresenterType, HomeViewSupplierType {
+protocol HomeControllerType: HomeViewSupplierType, HomePresenterType { }
+
+internal class HomePresenter: HomeControllerType, ObservableObject {
 
     private let moduleDelegate: HomeDelegate
 
     private let cameraInteractor: CameraDocumentInteractor
+    private var persistenceInteractor: PersistenceInteractor
 
     var didChange = PassthroughSubject<[Document], Never>()
     private var documents: [Document] {
@@ -32,17 +35,22 @@ internal class HomePresenter: HomePresenterType, HomeViewSupplierType {
             didChange.send(newValue)
         }
     }
-    private var addedDocumentsCompletion: ((Document) -> Void)? = nil
 
 
-    init(delegate: HomeDelegate, cameraInteractor: CameraDocumentInteractor) {
+    init(delegate: HomeDelegate,
+         cameraInteractor: CameraDocumentInteractor,
+         persistenceInteractor: PersistenceInteractor) {
         self.moduleDelegate = delegate
         self.cameraInteractor = cameraInteractor
+        self.persistenceInteractor = persistenceInteractor
+
         documents = []
     }
 
-    func setAddDocumentCompletion(completion: @escaping (Document) -> Void) {
-        addedDocumentsCompletion = completion
+    func loadDocuments() {
+        persistenceInteractor.loadDocumentMetadatas { [weak self] (metas) in
+            self?.documents = metas.map { Document(pages: [], metaData: $0) }
+        }
     }
 
     func createViewModel() -> HomeViewModel {
@@ -59,7 +67,9 @@ internal class HomePresenter: HomePresenterType, HomeViewSupplierType {
 extension HomePresenter: CameraDocumentInteractorDelegate {
     func didFinish(withDocument document: Document) {
         documents.append(document)
-        addedDocumentsCompletion?(document)
+
+        persistenceInteractor.save(document: document)
+
         let utterance = AVSpeechUtterance(string: document.aggragatedText)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
         utterance.rate = 0.6

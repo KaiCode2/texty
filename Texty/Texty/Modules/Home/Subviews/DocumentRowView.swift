@@ -17,7 +17,7 @@ struct DocumentRowView: View {
 
     var body: some View {
         HStack {
-            (documentMetadata.coverImage ?? Image(systemName: "doc"))
+            (documentMetadata.coverImage != nil ? Image(uiImage: documentMetadata.coverImage!) : Image(systemName: "doc"))
                 .resizable()
                 .frame(width: 50, height: 50)
             VStack {

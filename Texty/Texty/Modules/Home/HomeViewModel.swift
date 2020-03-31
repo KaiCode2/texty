@@ -12,7 +12,11 @@ import Combine
 class HomeViewModel: ObservableObject {
     @ObservedObject private var presenter: HomePresenter
 
-    @Published var documentsMetadata: [Document.MetaData]
+    @Published var documentsMetadata: [Document.MetaData] {
+        willSet(newValue) {
+            print(newValue)
+        }
+    }
 
     private var assigner: AnyCancellable!
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="DocumentModel" representedClassName="DocumentModel" syncable="YES" codeGenerationType="class">
         <attribute name="author" optional="YES" attributeType="String"/>
         <attribute name="coverImage" optional="YES" attributeType="Binary"/>
@@ -8,14 +8,16 @@
         <attribute name="pageCount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="pagesIds" optional="YES" attributeType="Transformable"/>
         <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="pages" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="PageModel" inverseName="document" inverseEntity="PageModel"/>
     </entity>
     <entity name="PageModel" representedClassName="PageModel" syncable="YES" codeGenerationType="class">
         <attribute name="image" optional="YES" attributeType="Binary"/>
         <attribute name="pageNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="words" optional="YES" attributeType="String"/>
+        <relationship name="document" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DocumentModel" inverseName="pages" inverseEntity="DocumentModel"/>
     </entity>
     <elements>
-        <element name="DocumentModel" positionX="-63" positionY="-18" width="128" height="148"/>
-        <element name="PageModel" positionX="-54" positionY="36" width="128" height="88"/>
+        <element name="DocumentModel" positionX="-63" positionY="-18" width="128" height="163"/>
+        <element name="PageModel" positionX="144.62109375" positionY="-16.84375" width="128" height="103"/>
     </elements>
 </model>

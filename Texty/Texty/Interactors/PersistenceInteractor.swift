@@ -10,70 +10,94 @@ import TextyKit
 import CoreData
 
 struct PersistenceInteractor {
+    enum CoreDataError: Error {
+        case fetchFailed
+    }
 
-    lazy var persistentContainer: NSPersistentContainer = {
-     let container = NSPersistentContainer(name: Constants.DocumentsModel)
-        container.loadPersistentStores { description, error in
+    private var persistentContainer: NSPersistentContainer
+    private var managedObjectContext: NSManagedObjectContext
+
+    init() {
+        persistentContainer = NSPersistentContainer(name: Constants.DocumentsModel)
+        persistentContainer.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
             }
         }
-        return container
-    }()
 
-    mutating func loadDocuments(completion: ([Document]) -> Void) {
-        let managedContext = persistentContainer.viewContext
-
-        let entity =
-            NSEntityDescription.entity(forEntityName: Constants.DocumentObject,
-                                     in: managedContext)!
-
-        let fetchRequest =
-          NSFetchRequest<NSManagedObject>(entityName: Constants.DocumentObject)
-
-        do {
-            let documents = try managedContext.fetch(fetchRequest)
-            completion(convertToDocuments(documents: documents))
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
+        guard let modelURL = Bundle.main.url(forResource: Constants.DocumentsModel, withExtension:"momd") else {
+            fatalError("Error loading model from bundle")
+        }
+        // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
+        guard let mom = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Error initializing mom from: \(modelURL)")
         }
 
-//        person.setValue(name, forKeyPath: "name")
+        let psc = NSPersistentStoreCoordinator(managedObjectModel: mom)
 
-//        do {
-//          try managedContext.save()
-//          people.append(person)
-//        } catch let error as NSError {
-//          print("Could not save. \(error), \(error.userInfo)")
-//        }
+        managedObjectContext = NSManagedObjectContext(concurrencyType: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType)
+        managedObjectContext.persistentStoreCoordinator = psc
+
+        let queue = DispatchQueue.global(qos: DispatchQoS.QoSClass.background)
+        queue.async {
+            guard let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last else {
+                fatalError("Unable to resolve document directory")
+            }
+            let storeURL = docURL.appendingPathComponent(Constants.DocumentsModel + ".sqlite")
+            do {
+                try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
+            } catch {
+                fatalError("Error migrating store: \(error)")
+            }
+        }
+    }
+
+    func loadDocumentMetadatas(completion: ([Document.MetaData]) -> Void) {
+        let managedContext = persistentContainer.viewContext
+
+        let documentsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Constants.DocumentsModel)
+
+        do {
+
+            guard let fetched = try managedContext.fetch(documentsFetch) as? [NSManagedObject] else {
+                throw CoreDataError.fetchFailed
+            }
+
+            let fetchedDicts = fetched.map { (managedObject) -> [String: Any] in
+                return managedObject.committedValues(forKeys: Document.propertyKeys)
+            }
+
+            let metaDatas = fetchedDicts.compactMap({ (dict) -> Document.MetaData? in
+                return try? Document.MetaData.fromDict(dict: dict)
+            })
+            completion(metaDatas)
+        } catch let error {
+            print(error)
+        }
+    }
+
+    func loadDocumentPages(completion: ([Document.Page]) -> Void) {
+
+    }
+
+    mutating func loadDocuments(completion: ([Document]) -> Void) {
+
     }
 
     mutating func save(document: Document) {
         let managedContext = persistentContainer.viewContext
 
-        let entity =
-            NSEntityDescription.entity(forEntityName: Constants.DocumentObject,
-                                       in: managedContext)!
+        let documentEntity = NSEntityDescription.insertNewObject(forEntityName: Constants.DocumentsModel,
+                                                           into: managedContext)
 
-        let documents = NSManagedObject(entity: entity,
-                                        insertInto: managedContext)
+        let metadataDict = document.metaData.toDict()
 
-//        let dictDocument = document.toDict()
-
+        documentEntity.setValuesForKeys(metadataDict)
         do {
             try managedContext.save()
-//            people.append(person)
+            print("Saved")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
-        }
-    }
-
-    private func convertToDocuments(documents: [NSManagedObject]) -> [Document] {
-        return documents.compactMap { (managedObject) -> Document? in
-            guard managedObject.description == Constants.DocumentObject else { return nil }
-
-            let atrributes = managedObject.committedValues(forKeys: Document.propertyKey)
-            return try? Document.fromDict(dict: atrributes)
         }
     }
 }

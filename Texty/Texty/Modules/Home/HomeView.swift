@@ -9,15 +9,16 @@
 import SwiftUI
 
 internal struct HomeView: View {
-    typealias PresenterType = HomePresenter //Any<HomePresenterType, HomeViewSupplier>
-    private var viewPresenter: HomeViewSupplierType
+    typealias PresenterType = HomeControllerType //Any<HomePresenterType, HomeViewSupplier>
+//    private var viewPresenter: HomeViewSupplierType
+    private var presenter: PresenterType
 
     @ObservedObject var viewModel: HomeViewModel
     
     @State fileprivate var isShowingScan = false
 
     init(presenter: PresenterType, viewModel: HomeViewModel) {
-        self.viewPresenter = presenter
+        self.presenter = presenter
         self.viewModel = viewModel
     }
 
@@ -38,9 +39,12 @@ internal struct HomeView: View {
             })
         }
         .sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
-            return self.viewPresenter.scanView()
+            return self.presenter.scanView()
         }
 
+        .onAppear {
+            self.presenter.loadDocuments()
+        }
     }
 }
 

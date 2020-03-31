@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import UIKit
 import TextyKit
 
 struct Document: Identifiable {
@@ -49,7 +50,7 @@ struct Document: Identifiable {
         let releaseDate: Date?
         let pageCount: Int?
 
-        var coverImage: Image?
+        var coverImage: UIImage?
 //        {
 //            didSet(newValue) {
 //                if newValue == nil {
@@ -68,21 +69,41 @@ struct Document: Identifiable {
         }
 
         static func fromDict(dict: [String: Any?]) throws -> MetaData {
-            guard let id = dict[Document.propertyKey[0]] as? UUID else {
+            guard let id = dict[Document.propertyKeys[0]] as? UUID else {
                 throw LocalError.invalidInput
             }
-            let title = dict[Document.propertyKey[1]] as? String
-            let author = dict[Document.propertyKey[2]] as? String
-            let date = dict[Document.propertyKey[3]] as? Date
-            let pageCount = dict[Document.propertyKey[4]] as? Int
+            let title = dict[Document.propertyKeys[1]] as? String
+            let author = dict[Document.propertyKeys[2]] as? String
+            let date = dict[Document.propertyKeys[3]] as? Date
+            let pageCount = dict[Document.propertyKeys[4]] as? Int
 
-            let coverImage = dict[Document.propertyKey[5]] as? Image
+            var coverImage: UIImage? = nil
+            if let imageData = dict[Document.propertyKeys[5]] as? Data,
+                let image = UIImage(data: imageData) {
+                coverImage = image
+            }
 
             return MetaData(id: id, title: title, author: author, releaseDate: date, pageCount: pageCount, coverImage: coverImage)
         }
 
         func toDict() -> [String: Any] {
-            return [:]
+            var dict: [String: Any] = [Document.propertyKeys[0]: id]
+            if let title = title {
+                dict[Document.propertyKeys[1]] = title
+            }
+            if let author = author {
+                dict[Document.propertyKeys[2]] = author
+            }
+            if let date = releaseDate {
+                dict[Document.propertyKeys[3]] = date
+            }
+            if let pageCount = pageCount {
+                dict[Document.propertyKeys[4]] = pageCount
+            }
+            if let coverImageData = coverImage?.pngData() {
+                dict[Document.propertyKeys[5]] = coverImageData
+            }
+            return dict
         }
 
         static func == (lhs: MetaData, rhs: MetaData) -> Bool {
@@ -104,14 +125,13 @@ struct Document: Identifiable {
         pages.append(Document.Page(pageNumber: number, pageContent: pageString, image: nil))
     }
 
-    static let propertyKey = [
+    static let propertyKeys = [
         "id",
         "title",
         "author",
         "date",
         "pageCount",
         "coverImage",
-        "pagesIds", /// TODO: stop storing IDs and use core data relationships
     ]
 }
 

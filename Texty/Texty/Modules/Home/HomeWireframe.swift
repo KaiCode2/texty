@@ -22,7 +22,8 @@ internal final class HomeWireframe {
 
     var view: some View {
         let cameraInteractor = CameraDocumentInteractor(delegate: nil)
-        let presenter = HomePresenter(delegate: moduleDelegate, cameraInteractor: cameraInteractor)
+        let persistenceInteractor = PersistenceInteractor()
+        let presenter = HomePresenter(delegate: moduleDelegate, cameraInteractor: cameraInteractor, persistenceInteractor: persistenceInteractor)
         cameraInteractor.delegate = presenter
         let view = HomeView(presenter: presenter, viewModel: presenter.createViewModel())
         return view
