@@ -9,10 +9,22 @@
 import SwiftUI
 
 struct DocumentDetailView: View {
-    var document: Document.MetaData
+    private var metaData: Document.MetaData
+
+
+    init(metaData: Document.MetaData) {
+        self.metaData = metaData
+    }
 
     var body: some View {
-        Text("Hello World")
+        VStack {
+            Text(metaData.title ?? "Untitled Document")
+
+
+//            ForEach (document.pages, id: \.self) { page in
+//                Text(page.pageContent)
+//            }
+        }
     }
 }
 

@@ -76,8 +76,29 @@ struct PersistenceInteractor {
         }
     }
 
-    func loadDocumentPages(completion: ([Document.Page]) -> Void) {
+    func loadDocumentPages(forDocument metaData: Document.MetaData, completion: ([Document.Page]) -> Void) {
+        let managedContext = persistentContainer.viewContext
 
+        let pagesFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Constants.PageModel)
+        pagesFetch.predicate = NSPredicate(format: "document.id == %@", argumentArray: [metaData.id])
+
+
+        do {
+            guard let fetched = try managedContext.fetch(pagesFetch) as? [NSManagedObject] else {
+                throw CoreDataError.fetchFailed
+            }
+
+            let fetchedDicts = fetched.map { (managedObject) -> [String: Any] in
+                return managedObject.committedValues(forKeys: Document.Page.propertyKeys)
+            }
+
+            let pages = fetchedDicts.compactMap({ (dict) -> Document.Page? in
+                return try? Document.Page.fromDict(dict: dict)
+            })
+            completion(pages)
+        } catch let error {
+            print(error)
+        }
     }
 
     mutating func loadDocuments(completion: ([Document]) -> Void) {
@@ -93,6 +114,20 @@ struct PersistenceInteractor {
         let metadataDict = document.metaData.toDict()
 
         documentEntity.setValuesForKeys(metadataDict)
+
+
+
+//        let pages = document.pages.map { (page) -> NSManagedObject in
+//            let pageEntity = NSEntityDescription.insertNewObject(forEntityName: Constants.PageModel,
+//                                                                 into: managedContext)
+//
+//            pageEntity.setValuesForKeys(page.toDict())
+//            pageEntity.setValue(documentEntity, forKey: "document")
+//
+//            return pageEntity
+//        }
+//
+//        documentEntity.setValue(pages, forKey: "pages")
         do {
             try managedContext.save()
             print("Saved")

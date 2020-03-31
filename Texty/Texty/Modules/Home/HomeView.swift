@@ -26,8 +26,25 @@ internal struct HomeView: View {
         NavigationView {
             List {
                 ForEach(viewModel.documentsMetadata, id: \.id) { (document)  in
-                    NavigationLink(destination: DocumentDetailView(document: document)) {
+                    NavigationLink(destination: DocumentDetailView(metaData: document)) {
                         DocumentRowView(metadata: document)
+                    }.contextMenu {
+                        Button(action: {
+                            self.presenter.playAudio(forDocument: document)
+                        }) {
+                            HStack {
+                                Text(NSLocalizedString("Play", comment: "Play audio"))
+                                Image(systemName: "play.fill")
+                            }
+                        }
+                        Button(action: {
+                            // Delete
+                        }) {
+                            HStack {
+                                Text(NSLocalizedString("Delete", comment: "Delete Document"))
+                                Image(systemName: "trash.fill")
+                            }
+                        }
                     }
                 }
             }
@@ -36,12 +53,13 @@ internal struct HomeView: View {
                 self.isShowingScan = true
             }) {
                 return Image(systemName: "plus.circle")
+                    .resizable()
+                    .frame(width: 30, height: 30, alignment: .center)
             })
         }
         .sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
             return self.presenter.scanView()
         }
-
         .onAppear {
             self.presenter.loadDocuments()
         }

@@ -25,21 +25,43 @@ struct Document: Identifiable {
         return metaData.id
     }
 
-    struct Page {
-        let pageNumber: Int?
+    struct Page: Identifiable, Hashable {
+        var id: Int {
+            return pageNumber
+        }
+
+        let pageNumber: Int
         let pageContent: String
         let image: CGImage?
 
         static func fromDict(dict: [String: Any?]) throws -> Page {
-            guard let pageContent = dict["pageContent"] as? String else {
+            guard let pageContent = dict["pageContent"] as? String,
+                let number = dict["pageNumber"] as? Int else {
                 throw LocalError.invalidInput
             }
-            let number = dict["pageNumber"] as? Int
             /// TODO: Sort this out later
 //            let image = CGImage(dict["image"])
 
             return Page(pageNumber: number, pageContent: pageContent, image: nil)
         }
+
+        func toDict() -> [String: Any] {
+            var dict: [String: Any] = [
+                Page.propertyKeys[0]: pageContent,
+                Page.propertyKeys[1]: pageNumber
+            ]
+
+            if let imageData = image?.png {
+                dict[Page.propertyKeys[2]] = imageData
+            }
+            return dict
+        }
+
+        static let propertyKeys = [
+            "pageContent",
+            "pageNumber",
+            "image"
+        ]
     }
     struct MetaData: Identifiable, Hashable {
         typealias ID = UUID
@@ -47,7 +69,7 @@ struct Document: Identifiable {
 
         let title: String?
         let author: String?
-        let releaseDate: Date?
+        let releaseDate: Date
         let pageCount: Int?
 
         var coverImage: UIImage?
@@ -65,16 +87,16 @@ struct Document: Identifiable {
 //        }
 
         static func empty() -> MetaData {
-            return MetaData(id: UUID(), title: nil, author: nil, releaseDate: nil, pageCount: nil, coverImage: nil)
+            return MetaData(id: UUID(), title: nil, author: nil, releaseDate: Date(), pageCount: nil, coverImage: nil)
         }
 
         static func fromDict(dict: [String: Any?]) throws -> MetaData {
-            guard let id = dict[Document.propertyKeys[0]] as? UUID else {
+            guard let id = dict[Document.propertyKeys[0]] as? UUID ,
+                let date = dict[Document.propertyKeys[3]] as? Date else {
                 throw LocalError.invalidInput
             }
             let title = dict[Document.propertyKeys[1]] as? String
             let author = dict[Document.propertyKeys[2]] as? String
-            let date = dict[Document.propertyKeys[3]] as? Date
             let pageCount = dict[Document.propertyKeys[4]] as? Int
 
             var coverImage: UIImage? = nil
@@ -87,15 +109,15 @@ struct Document: Identifiable {
         }
 
         func toDict() -> [String: Any] {
-            var dict: [String: Any] = [Document.propertyKeys[0]: id]
+            var dict: [String: Any] = [
+                Document.propertyKeys[0]: id,
+                Document.propertyKeys[3]: releaseDate
+            ]
             if let title = title {
                 dict[Document.propertyKeys[1]] = title
             }
             if let author = author {
                 dict[Document.propertyKeys[2]] = author
-            }
-            if let date = releaseDate {
-                dict[Document.propertyKeys[3]] = date
             }
             if let pageCount = pageCount {
                 dict[Document.propertyKeys[4]] = pageCount
@@ -122,7 +144,15 @@ struct Document: Identifiable {
     }
 
     mutating func add(pageString: String, number: Int? = nil) {
-        pages.append(Document.Page(pageNumber: number, pageContent: pageString, image: nil))
+        var number = number
+        if number == nil {
+            if let last = pages.last?.pageNumber {
+                number = last + 1
+            } else {
+                number = 0
+            }
+        }
+        pages.append(Document.Page(pageNumber: number!, pageContent: pageString, image: nil))
     }
 
     static let propertyKeys = [

@@ -16,18 +16,22 @@ struct DocumentRowView: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(spacing: 20) {
             (documentMetadata.coverImage != nil ? Image(uiImage: documentMetadata.coverImage!) : Image(systemName: "doc"))
-                .resizable()
-                .frame(width: 50, height: 50)
-            VStack {
+                .resizable(capInsets: EdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5),
+                           resizingMode: .stretch)
+                .frame(width: 30, height: 30)
+
+
+
+            VStack (alignment: .leading) {
                 Text(documentMetadata.title ?? "Untitled Document")
-                Text(DateFormatter.localizedString(from: documentMetadata.releaseDate ?? Date(),
+                    .font(.title)
+                Text(DateFormatter.localizedString(from: documentMetadata.releaseDate,
                                                    dateStyle: .medium,
                                                    timeStyle: .short))
+                    .font(.subheadline)
             }
-
-            Spacer()
         }
     }
 }

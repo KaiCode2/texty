@@ -18,6 +18,9 @@ protocol HomeViewSupplierType {
 
 protocol HomePresenterType {
     func loadDocuments()
+    func document(fromMetaData metaData: Document.MetaData) -> Document
+    func playAudio(forDocument document: Document.MetaData)
+    func deleteDocument(document: Document.MetaData)
 }
 
 protocol HomeControllerType: HomeViewSupplierType, HomePresenterType { }
@@ -51,6 +54,23 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
         persistenceInteractor.loadDocumentMetadatas { [weak self] (metas) in
             self?.documents = metas.map { Document(pages: [], metaData: $0) }
         }
+    }
+
+    func document(fromMetaData metaData: Document.MetaData) -> Document {
+
+//        persistenceInteractor.loadDocumentPages(forDocument: metaData) { (pages) in
+//            print(pages)
+//        }
+
+        return Document(pages: [], metaData: metaData)
+    }
+
+    func playAudio(forDocument document: Document.MetaData) {
+        print("Unimplmented")
+    }
+
+    func deleteDocument(document: Document.MetaData) {
+        print("Unimplmented")
     }
 
     func createViewModel() -> HomeViewModel {
