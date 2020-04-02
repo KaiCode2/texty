@@ -9,26 +9,61 @@
 import SwiftUI
 
 internal struct HomeView: View {
-    private let presenter: HomePresenterType
+    typealias PresenterType = HomeControllerType //Any<HomePresenterType, HomeViewSupplier>
+//    private var viewPresenter: HomeViewSupplierType
+    private var presenter: PresenterType
 
-    @State var isShowingScan = false
+    @ObservedObject var viewModel: HomeViewModel
+    
+    @State fileprivate var isShowingScan = false
 
-    init(presenter: HomePresenterType) {
+    init(presenter: PresenterType, viewModel: HomeViewModel) {
         self.presenter = presenter
+        self.viewModel = viewModel
     }
 
-//    @State var model: HomePresenter.Model
-
-     var body: some View {
-        Button(action: {
-            self.isShowingScan = true
-        }) {
-            return Text("Add")
-        }.sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(viewModel.documentsMetadata, id: \.id) { (document)  in
+                    NavigationLink(destination: DocumentDetailView(metaData: document)) {
+                        DocumentRowView(metadata: document)
+                    }.contextMenu {
+                        Button(action: {
+                            self.presenter.playAudio(forDocument: document)
+                        }) {
+                            HStack {
+                                Text(NSLocalizedString("Play", comment: "Play audio"))
+                                Image(systemName: "play.fill")
+                            }
+                        }
+                        Button(action: {
+                            // Delete
+                        }) {
+                            HStack {
+                                Text(NSLocalizedString("Delete", comment: "Delete Document"))
+                                Image(systemName: "trash.fill")
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationBarTitle(Text(NSLocalizedString("Documents", comment: "Documents")))
+            .navigationBarItems(trailing: Button(action: {
+                self.isShowingScan = true
+            }) {
+                return Image(systemName: "plus.circle")
+                    .resizable()
+                    .frame(width: 30, height: 30, alignment: .center)
+            })
+        }
+        .sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
             return self.presenter.scanView()
         }
+        .onAppear {
+            self.presenter.loadDocuments()
+        }
     }
-
 }
 
 #if DEBUG

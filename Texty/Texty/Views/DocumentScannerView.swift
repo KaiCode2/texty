@@ -13,11 +13,9 @@ import VisionKit
 internal struct DocumentScannerView: UIViewControllerRepresentable {
     typealias UIViewControllerType = VNDocumentCameraViewController
 
-//    private let delegate: CameraDocumentInteractorDelegate
     private var interactor: CameraDocumentInteractor
 
     init(interactor: CameraDocumentInteractor) {
-//        self.delegate = delegate
         self.interactor = interactor
     }
 
