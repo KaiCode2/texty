@@ -27,7 +27,7 @@ protocol HomeControllerType: HomeViewSupplierType, HomePresenterType { }
 
 internal class HomePresenter: HomeControllerType, ObservableObject {
 
-    private let moduleDelegate: HomeDelegate
+    private let moduleDelegate: HomeDelegate?
 
     private let cameraInteractor: CameraDocumentInteractor
     private var persistenceInteractor: PersistenceInteractor
@@ -40,7 +40,7 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
     }
 
 
-    init(delegate: HomeDelegate,
+    init(delegate: HomeDelegate?,
          cameraInteractor: CameraDocumentInteractor,
          persistenceInteractor: PersistenceInteractor) {
         self.moduleDelegate = delegate

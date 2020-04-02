@@ -67,9 +67,11 @@ internal struct HomeView: View {
 }
 
 #if DEBUG
-//struct ContentView_Previews : PreviewProvider {
-//    static var previews: some View {
-//       HomeView(presenter: HomePresenter(delegate: RootCoordinator(window: UIWindow())))
-//    }
-//}
+struct ContentView_Previews : PreviewProvider {
+
+    static var previews: some View {
+        // TODO: add injected view models
+        HomeWireframe(delegate: nil).view
+    }
+}
 #endif
