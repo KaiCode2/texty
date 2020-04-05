@@ -38,6 +38,7 @@
 		ACB9C58A23E2965800BEB6A2 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB9C58923E2965800BEB6A2 /* RootCoordinator.swift */; };
 		ACB9C59223E8C63B00BEB6A2 /* CameraDocumentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB9C59123E8C63B00BEB6A2 /* CameraDocumentInteractor.swift */; };
 		ACB9C59423E8C6C200BEB6A2 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB9C59323E8C6C200BEB6A2 /* Document.swift */; };
+		ACEBC4BF24398E6100F3AE88 /* Document+ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEBC4BE24398E6100F3AE88 /* Document+ManagedObject.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,7 @@
 		ACB9C58923E2965800BEB6A2 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		ACB9C59123E8C63B00BEB6A2 /* CameraDocumentInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDocumentInteractor.swift; sourceTree = "<group>"; };
 		ACB9C59323E8C6C200BEB6A2 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		ACEBC4BE24398E6100F3AE88 /* Document+ManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Document+ManagedObject.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,7 +270,7 @@
 		AC8F556723EBB43300B62613 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				ACB3CF96241CE3110020ADE6 /* DocumentModel.xcdatamodeld */,
+				ACEBC4BD24396D2500F3AE88 /* Core Data */,
 				ACB9C59323E8C6C200BEB6A2 /* Document.swift */,
 			);
 			path = Models;
@@ -303,6 +305,15 @@
 				ACAE468F2427755C002F1506 /* Info.plist */,
 			);
 			path = TextyKit;
+			sourceTree = "<group>";
+		};
+		ACEBC4BD24396D2500F3AE88 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				ACB3CF96241CE3110020ADE6 /* DocumentModel.xcdatamodeld */,
+				ACEBC4BE24398E6100F3AE88 /* Document+ManagedObject.swift */,
+			);
+			path = "Core Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -452,6 +463,7 @@
 				ACB9C59223E8C63B00BEB6A2 /* CameraDocumentInteractor.swift in Sources */,
 				AC08437824050C8700FF80D2 /* HomeViewModel.swift in Sources */,
 				AC8F556123EBB1F000B62613 /* HomePresenter.swift in Sources */,
+				ACEBC4BF24398E6100F3AE88 /* Document+ManagedObject.swift in Sources */,
 				AC8F555D23EBB06800B62613 /* EditDocumentPresenter.swift in Sources */,
 				AC08436F23FCCDE100FF80D2 /* DocumentDetailView.swift in Sources */,
 				AC8F555323EAAFB100B62613 /* PersistenceInteractor.swift in Sources */,
@@ -822,8 +834,7 @@
 				ACB3CF97241CE3110020ADE6 /* DocumentModel.xcdatamodel */,
 			);
 			currentVersion = ACB3CF97241CE3110020ADE6 /* DocumentModel.xcdatamodel */;
-			name = DocumentModel.xcdatamodeld;
-			path = ../Interactors/DocumentModel.xcdatamodeld;
+			path = DocumentModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

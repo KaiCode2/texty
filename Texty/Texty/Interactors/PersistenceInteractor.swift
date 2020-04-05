@@ -12,20 +12,22 @@ import CoreData
 struct PersistenceInteractor {
     enum CoreDataError: Error {
         case fetchFailed
+
+        case unimplemented(String?)
     }
 
     private var persistentContainer: NSPersistentContainer
     private var managedObjectContext: NSManagedObjectContext
 
     init() {
-        persistentContainer = NSPersistentContainer(name: Constants.DocumentsModel)
+        persistentContainer = NSPersistentContainer(name: Constants.CoreData.DocumentsModel)
         persistentContainer.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
             }
         }
 
-        guard let modelURL = Bundle.main.url(forResource: Constants.DocumentsModel, withExtension:"momd") else {
+        guard let modelURL = Bundle.main.url(forResource: Constants.CoreData.DocumentsModel, withExtension:"momd") else {
             fatalError("Error loading model from bundle")
         }
         // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
@@ -43,7 +45,7 @@ struct PersistenceInteractor {
             guard let docURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last else {
                 fatalError("Unable to resolve document directory")
             }
-            let storeURL = docURL.appendingPathComponent(Constants.DocumentsModel + ".sqlite")
+            let storeURL = docURL.appendingPathComponent(Constants.CoreData.DocumentsModel + ".sqlite")
             do {
                 try psc.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: nil)
             } catch {
@@ -52,10 +54,10 @@ struct PersistenceInteractor {
         }
     }
 
-    func loadDocumentMetadatas(completion: ([Document.MetaData]) -> Void) {
+    func loadDocumentMetadatas() throws -> [Document.MetaData] {
         let managedContext = persistentContainer.viewContext
 
-        let documentsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Constants.DocumentsModel)
+        let documentsFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Constants.CoreData.DocumentsModel)
 
         do {
 
@@ -70,18 +72,22 @@ struct PersistenceInteractor {
             let metaDatas = fetchedDicts.compactMap({ (dict) -> Document.MetaData? in
                 return try? Document.MetaData.fromDict(dict: dict)
             })
-            completion(metaDatas)
+            return metaDatas
         } catch let error {
             print(error)
+            throw error
         }
     }
 
-    func loadDocumentPages(forDocument metaData: Document.MetaData, completion: ([Document.Page]) -> Void) {
+    func loadDocumentPages(forDocument metaData: Document.MetaData, maxPagesPerFetch: Int? = nil) throws -> [Document.Page] {
         let managedContext = persistentContainer.viewContext
 
-        let pagesFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Constants.PageModel)
+        let pagesFetch = NSFetchRequest<NSFetchRequestResult>(entityName: Constants.CoreData.PageModel)
         pagesFetch.predicate = NSPredicate(format: "document.id == %@", argumentArray: [metaData.id])
 
+        if let maxPagesPerFetch = maxPagesPerFetch {
+            pagesFetch.fetchLimit = maxPagesPerFetch
+        }
 
         do {
             guard let fetched = try managedContext.fetch(pagesFetch) as? [NSManagedObject] else {
@@ -95,44 +101,44 @@ struct PersistenceInteractor {
             let pages = fetchedDicts.compactMap({ (dict) -> Document.Page? in
                 return try? Document.Page.fromDict(dict: dict)
             })
-            completion(pages)
+            return pages
         } catch let error {
             print(error)
+            throw error
         }
     }
 
-    mutating func loadDocuments(completion: ([Document]) -> Void) {
-
+    mutating func loadDocuments(withEmptyMetadatas: Bool = false, thresholdForMaxPages: Int? = nil) throws -> [Document] {
+        do {
+            let metas = try loadDocumentMetadatas()
+            var documents: [Document]
+            if !withEmptyMetadatas { // load pages
+                documents = try metas.map({ (meta) -> Document in
+                    let pages = try loadDocumentPages(forDocument: meta, maxPagesPerFetch: thresholdForMaxPages)
+                    return Document(pages: pages, metaData: meta)
+                })
+                return documents
+            } else { // return empty pages
+                return metas.map { (meta) -> Document in
+                    return Document(pages: [], metaData: meta)
+                }
+            }
+        } catch let error {
+            throw error
+        }
     }
 
-    mutating func save(document: Document) {
+    mutating func save(document: Document) throws {
         let managedContext = persistentContainer.viewContext
 
-        let documentEntity = NSEntityDescription.insertNewObject(forEntityName: Constants.DocumentsModel,
-                                                           into: managedContext)
+        let model = document.makeEntity(inContext: managedContext)
 
-        let metadataDict = document.metaData.toDict()
-
-        documentEntity.setValuesForKeys(metadataDict)
-
-
-
-//        let pages = document.pages.map { (page) -> NSManagedObject in
-//            let pageEntity = NSEntityDescription.insertNewObject(forEntityName: Constants.PageModel,
-//                                                                 into: managedContext)
-//
-//            pageEntity.setValuesForKeys(page.toDict())
-//            pageEntity.setValue(documentEntity, forKey: "document")
-//
-//            return pageEntity
-//        }
-//
-//        documentEntity.setValue(pages, forKey: "pages")
         do {
             try managedContext.save()
             print("Saved")
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
+            throw error
         }
     }
 }

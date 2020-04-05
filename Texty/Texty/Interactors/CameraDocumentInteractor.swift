@@ -22,29 +22,6 @@ internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewCon
         self.document = document ?? Document(pages: [], metaData: Document.MetaData.empty())
     }
 
-    private var textRecognitionRequest: VNRecognizeTextRequest {
-        let req = VNRecognizeTextRequest(completionHandler: { (request, error) in
-            if let results = request.results, !results.isEmpty {
-                if let requestResults = request.results as? [VNRecognizedTextObservation] {
-                    for result in requestResults {
-                        guard let candidate = result.topCandidates(1).first else { continue }
-                        let line = candidate.string
-                        if candidate.string.last == "-" {
-                            self.document.add(pageString: line)
-                        } else {
-                            self.document.add(pageString: line + " ")
-                        }
-                    }
-                    self.delegate?.didFinish(withDocument: self.document)
-                }
-            }
-        })
-
-        req.recognitionLevel = .accurate
-        req.usesLanguageCorrection = true
-        return req
-    }
-
     func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
         controller.dismiss(animated: true) {
                         DispatchQueue.global(qos: .userInitiated).async {
@@ -52,6 +29,7 @@ internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewCon
                                 let image = scan.imageOfPage(at: pageNumber)
                                 self.processImage(image: image)
                             }
+                            self.delegate?.didFinish(withDocument: self.document)
                         }
                     }
     }
@@ -66,9 +44,35 @@ private extension CameraDocumentInteractor {
 
         let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
         do {
-            try handler.perform([textRecognitionRequest])
+            try handler.perform([makeTextRecognitionRequest()])
         } catch {
             print(error)
         }
+    }
+
+    func makeTextRecognitionRequest() -> VNRecognizeTextRequest {
+        let req = VNRecognizeTextRequest(completionHandler: { (request, error) in
+            if let results = request.results, !results.isEmpty {
+                if let requestResults = request.results as? [VNRecognizedTextObservation] {
+                    let newPageString = requestResults.reduce("") { (textString, result) -> String in
+                        guard let candidate = result.topCandidates(1).first else {
+                            print("WARNING: could not load candidate for line")
+                            return ""
+                        }
+                        let line = candidate.string
+                        if candidate.string.last == "-" {
+                            return textString + line
+                        } else {
+                            return textString + " " + line
+                        }
+                    }
+                    self.document.add(pageString: newPageString)
+                }
+            }
+        })
+
+        req.recognitionLevel = .accurate
+        req.usesLanguageCorrection = true
+        return req
     }
 }

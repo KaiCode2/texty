@@ -12,12 +12,21 @@ import UIKit
 import TextyKit
 
 struct Document: Identifiable {
-    var pages: [Page]
-    let metaData: MetaData
+    var pages: [Page] {
+        didSet {
+            metaData.pageCount = pages.count
+        }
+    }
+
+
+    var metaData: MetaData
+    private(set) var isPagesLoaded: Bool
 
     init(pages: [Page], metaData: MetaData) {
         self.pages = pages
         self.metaData = metaData
+
+        self.isPagesLoaded = pages.count != (metaData.pageCount - 1)
     }
 
 
@@ -67,37 +76,25 @@ struct Document: Identifiable {
         typealias ID = UUID
         var id: UUID
 
-        let title: String?
-        let author: String?
-        let releaseDate: Date
-        let pageCount: Int?
+        var title: String?
+        var author: String?
+        var releaseDate: Date
+        var pageCount: Int
 
         var coverImage: UIImage?
-//        {
-//            didSet(newValue) {
-//                if newValue == nil {
-//                    if let pageCount = pageCount {
-//                        let isMultiplePages = pageCount > 1
-//                        self.coverImage = isMultiplePages ? Image(systemName: "book") : Image(systemName: "doc")
-//                    } else {
-//                        self.coverImage = Image(systemName: "doc")
-//                    }
-//                }
-//            }
-//        }
 
         static func empty() -> MetaData {
-            return MetaData(id: UUID(), title: nil, author: nil, releaseDate: Date(), pageCount: nil, coverImage: nil)
+            return MetaData(id: UUID(), title: nil, author: nil, releaseDate: Date(), pageCount: 0, coverImage: nil)
         }
 
         static func fromDict(dict: [String: Any?]) throws -> MetaData {
             guard let id = dict[Document.propertyKeys[0]] as? UUID ,
-                let date = dict[Document.propertyKeys[3]] as? Date else {
+                let date = dict[Document.propertyKeys[3]] as? Date,
+                let pageCount = dict[Document.propertyKeys[4]] as? Int else {
                 throw LocalError.invalidInput
             }
             let title = dict[Document.propertyKeys[1]] as? String
             let author = dict[Document.propertyKeys[2]] as? String
-            let pageCount = dict[Document.propertyKeys[4]] as? Int
 
             var coverImage: UIImage? = nil
             if let imageData = dict[Document.propertyKeys[5]] as? Data,
@@ -111,16 +108,14 @@ struct Document: Identifiable {
         func toDict() -> [String: Any] {
             var dict: [String: Any] = [
                 Document.propertyKeys[0]: id,
-                Document.propertyKeys[3]: releaseDate
+                Document.propertyKeys[3]: releaseDate,
+                Document.propertyKeys[4]: pageCount
             ]
             if let title = title {
                 dict[Document.propertyKeys[1]] = title
             }
             if let author = author {
                 dict[Document.propertyKeys[2]] = author
-            }
-            if let pageCount = pageCount {
-                dict[Document.propertyKeys[4]] = pageCount
             }
             if let coverImageData = coverImage?.pngData() {
                 dict[Document.propertyKeys[5]] = coverImageData
@@ -143,7 +138,7 @@ struct Document: Identifiable {
         }
     }
 
-    mutating func add(pageString: String, number: Int? = nil) {
+    mutating func add(pageString: String, number: Int? = nil, image: CGImage? = nil) {
         var number = number
         if number == nil {
             if let last = pages.last?.pageNumber {
@@ -152,7 +147,7 @@ struct Document: Identifiable {
                 number = 0
             }
         }
-        pages.append(Document.Page(pageNumber: number!, pageContent: pageString, image: nil))
+        pages.append(Document.Page(pageNumber: number!, pageContent: pageString, image: image))
     }
 
     static let propertyKeys = [
