@@ -27,7 +27,7 @@ protocol HomeControllerType: HomeViewSupplierType, HomePresenterType { }
 
 internal class HomePresenter: HomeControllerType, ObservableObject {
 
-    private let moduleDelegate: HomeDelegate
+    private let moduleDelegate: HomeDelegate?
 
     private let cameraInteractor: CameraDocumentInteractor
     private var persistenceInteractor: PersistenceInteractor
@@ -40,7 +40,7 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
     }
 
 
-    init(delegate: HomeDelegate,
+    init(delegate: HomeDelegate?,
          cameraInteractor: CameraDocumentInteractor,
          persistenceInteractor: PersistenceInteractor) {
         self.moduleDelegate = delegate
@@ -51,8 +51,10 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
     }
 
     func loadDocuments() {
-        persistenceInteractor.loadDocumentMetadatas { [weak self] (metas) in
-            self?.documents = metas.map { Document(pages: [], metaData: $0) }
+        do {
+            self.documents = try persistenceInteractor.loadDocuments()
+        } catch let error  {
+            print(error)
         }
     }
 
@@ -88,7 +90,8 @@ extension HomePresenter: CameraDocumentInteractorDelegate {
     func didFinish(withDocument document: Document) {
         documents.append(document)
 
-        persistenceInteractor.save(document: document)
+        do { try persistenceInteractor.save(document: document) }
+        catch let error { print(error) }
 
         let utterance = AVSpeechUtterance(string: document.aggragatedText)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")

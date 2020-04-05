@@ -14,9 +14,9 @@ protocol HomeDelegate {
 }
 
 internal final class HomeWireframe {
-    private let moduleDelegate: HomeDelegate
+    private let moduleDelegate: HomeDelegate?
 
-    init(delegate: HomeDelegate) {
+    init(delegate: HomeDelegate?) {
         self.moduleDelegate = delegate
     }
 

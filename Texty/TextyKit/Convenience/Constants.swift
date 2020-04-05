@@ -9,7 +9,11 @@
 import Foundation
 
 public enum Constants {
-    public static let DocumentsModel = "DocumentModel"
-    public static let DocumentObject = "Document"
-    public static let PageModel = "PageModel"
+    public enum CoreData {
+        public static let DocumentsModel = "DocumentModel"
+        public static let DocumentObject = "Document"
+        public static let PageModel = "PageModel"
+
+        public static let pagesRelation = "pages"
+    }
 }
