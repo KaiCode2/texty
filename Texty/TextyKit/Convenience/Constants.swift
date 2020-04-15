@@ -6,7 +6,7 @@
 //  Copyright © 2020 Kai Aldag. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 public enum Constants {
     public enum CoreData {
@@ -15,5 +15,9 @@ public enum Constants {
         public static let PageModel = "PageModel"
 
         public static let pagesRelation = "pages"
+    }
+
+    public enum Images {
+        public static let camera = UIImage(systemName: "camera")!
     }
 }

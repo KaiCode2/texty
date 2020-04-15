@@ -16,6 +16,7 @@ internal struct HomeView: View {
     @ObservedObject var viewModel: HomeViewModel
     
     @State fileprivate var isShowingScan = false
+    @State fileprivate var userSelectedDeleteDocument: Document.MetaData? = nil
 
     init(presenter: PresenterType, viewModel: HomeViewModel) {
         self.presenter = presenter
@@ -26,26 +27,35 @@ internal struct HomeView: View {
         NavigationView {
             List {
                 ForEach(viewModel.documentsMetadata, id: \.id) { (document)  in
-                    NavigationLink(destination: DocumentDetailView(metaData: document)) {
+                    NavigationLink(destination: DocumentDetailView(document: self.presenter.document(fromMetaData: document))) {
                         DocumentRowView(metadata: document)
-                    }.contextMenu {
-                        Button(action: {
-                            self.presenter.playAudio(forDocument: document)
-                        }) {
-                            HStack {
-                                Text(NSLocalizedString("Play", comment: "Play audio"))
-                                Image(systemName: "play.fill")
+                        .contextMenu {
+                            Button(action: {
+                                self.presenter.playAudio(forDocument: document)
+                            }) {
+                                HStack {
+                                    Text(NSLocalizedString("Play", comment: "Play audio"))
+                                    Image(systemName: "play.fill")
+                                }
                             }
-                        }
-                        Button(action: {
-                            // Delete
-                        }) {
-                            HStack {
-                                Text(NSLocalizedString("Delete", comment: "Delete Document"))
-                                Image(systemName: "trash.fill")
+                            Button(action: {
+                                self.userSelectedDeleteDocument = document
+                            }) {
+                                HStack {
+                                    Text(NSLocalizedString("Delete", comment: "Delete Document"))
+                                    Image(systemName: "trash.fill")
+                                }
                             }
                         }
                     }
+                }
+                .onDelete { (indexSet) in
+                    guard let index = indexSet.first,
+                        index < self.viewModel.documentsMetadata.count,
+                        indexSet.count == 1 else {
+                            return
+                    }
+                    self.userSelectedDeleteDocument = self.viewModel.documentsMetadata[index]
                 }
             }
             .navigationBarTitle(Text(NSLocalizedString("Documents", comment: "Documents")))
@@ -57,6 +67,13 @@ internal struct HomeView: View {
                     .frame(width: 30, height: 30, alignment: .center)
             })
         }
+        .alert(item: $userSelectedDeleteDocument, content: { (document) -> Alert in
+            Alert(title: Text("Are you sure you want to delete this document? This action cannot be reversed."),
+                  primaryButton: Alert.Button.destructive(Text("Delete"), action: {
+                    self.presenter.deleteDocument(document: document)
+                  }),
+                  secondaryButton: Alert.Button.cancel())
+        })
         .sheet(isPresented: self.$isShowingScan) { () -> DocumentScannerView in
             return self.presenter.scanView()
         }

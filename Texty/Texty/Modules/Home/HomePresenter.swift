@@ -18,7 +18,7 @@ protocol HomeViewSupplierType {
 
 protocol HomePresenterType {
     func loadDocuments()
-    func document(fromMetaData metaData: Document.MetaData) -> Document
+    func document(fromMetaData metaData: Document.MetaData) -> Binding<Document>
     func playAudio(forDocument document: Document.MetaData)
     func deleteDocument(document: Document.MetaData)
 }
@@ -26,7 +26,6 @@ protocol HomePresenterType {
 protocol HomeControllerType: HomeViewSupplierType, HomePresenterType { }
 
 internal class HomePresenter: HomeControllerType, ObservableObject {
-
     private let moduleDelegate: HomeDelegate?
 
     private let cameraInteractor: CameraDocumentInteractor
@@ -58,13 +57,31 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
         }
     }
 
-    func document(fromMetaData metaData: Document.MetaData) -> Document {
+    func document(fromMetaData metaData: Document.MetaData) -> Binding<Document> {
 
-//        persistenceInteractor.loadDocumentPages(forDocument: metaData) { (pages) in
-//            print(pages)
-//        }
+        guard let document = documents.enumerated().filter({ return $0.1.id == metaData.id }).first else {
+            fatalError()
+        }
 
-        return Document(pages: [], metaData: metaData)
+        if document.element.isPagesLoaded {
+            return Binding(get: {
+                return self.documents[document.offset]
+            }) { newValue in
+                self.documents[document.offset] = newValue
+            }
+        } else {
+            do {
+                let pages = try persistenceInteractor.loadDocumentPages(forDocument: metaData)
+                documents[document.offset].pages = pages
+                return Binding(get: {
+                    return self.documents[document.offset]
+                }) { newValue in
+                    self.documents[document.offset] = newValue
+                }
+            } catch {
+                fatalError()
+            }
+        }
     }
 
     func playAudio(forDocument document: Document.MetaData) {
@@ -72,7 +89,12 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
     }
 
     func deleteDocument(document: Document.MetaData) {
-        print("Unimplmented")
+        do {
+            try persistenceInteractor.deleteDocument(document: document)
+            documents.removeAll(where: { return $0.id == document.id })
+        } catch let error {
+
+        }
     }
 
     func createViewModel() -> HomeViewModel {

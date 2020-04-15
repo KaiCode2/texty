@@ -131,7 +131,7 @@ struct PersistenceInteractor {
     mutating func save(document: Document) throws {
         let managedContext = persistentContainer.viewContext
 
-        let model = document.makeEntity(inContext: managedContext)
+        document.makeEntity(inContext: managedContext)
 
         do {
             try managedContext.save()
@@ -140,5 +140,28 @@ struct PersistenceInteractor {
             print("Could not save. \(error), \(error.userInfo)")
             throw error
         }
+    }
+
+    func deleteDocument(document: Document.MetaData) throws {
+        let managedContext = persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: Constants.CoreData.DocumentsModel)
+        fetchRequest.predicate = NSPredicate(format: "id == %@", argumentArray: [document.id])
+        do {
+            let documentModels = try managedContext.fetch(fetchRequest)
+            if let documentModel = documentModels.first,
+               documentModels.count == 1 {
+                managedContext.delete(documentModel)
+                try managedContext.save()
+            } else {
+                throw CoreDataError.fetchFailed
+            }
+        } catch let error {
+            throw error
+        }
+    }
+
+    func deletePage(page: Document.Page) throws {
+
     }
 }

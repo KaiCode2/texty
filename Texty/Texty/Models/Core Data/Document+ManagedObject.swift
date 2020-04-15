@@ -10,7 +10,7 @@ import CoreData
 import TextyKit
 
 extension Document {
-    func makeEntity(inContext context: NSManagedObjectContext) -> DocumentModel {
+    @discardableResult func makeEntity(inContext context: NSManagedObjectContext) -> DocumentModel {
         let documentEntity = NSEntityDescription.insertNewObject(forEntityName: Constants.CoreData.DocumentsModel,
                                                            into: context)
 
