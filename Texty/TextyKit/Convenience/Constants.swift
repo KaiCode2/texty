@@ -20,4 +20,8 @@ public enum Constants {
     public enum Images {
         public static let camera = UIImage(systemName: "camera")!
     }
+
+    public enum Published {
+        public static let metaData = "metaData"
+    }
 }

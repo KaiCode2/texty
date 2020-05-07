@@ -32,6 +32,18 @@ struct DocumentDetailView: View {
                     CirclePlayView()
                         .frame(width: 100, height: 100)
                         .offset(x: 0, y: -50 + verticalOffset)
+
+                    HStack(alignment: .top, spacing: 5) {
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(document.metaData.author.wrappedValue ?? "Untitled Author")
+                            Text("\(DateFormatter.localizedString(from: document.metaData.releaseDate.wrappedValue, dateStyle: .medium, timeStyle: .none))")
+                        }.padding(.leading, 10)
+                        Spacer(minLength: 50)
+                        VStack(alignment: .trailing, spacing: 5) {
+                            Text("PAGE# / \(document.metaData.pageCount.wrappedValue)")
+                            Text("Time Remaining")
+                        }.padding(.trailing, 10)
+                    }.offset(x: 0, y: -90 + verticalOffset)
                 }
             }
         }
