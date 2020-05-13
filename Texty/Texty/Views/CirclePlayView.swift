@@ -12,6 +12,7 @@ import Combine
 internal struct CirclePlayView: View {
 
     @State private var isPlaying = false
+    private var playPublisher = Publishers.PlayPublisher()
 
     var body: some View {
         ZStack {
@@ -36,6 +37,8 @@ internal struct CirclePlayView: View {
             withAnimation(.easeOut(duration: 0.2)) {
                 self.isPlaying.toggle()
             }
+        }.onReceive(playPublisher) { (playback) in
+            self.isPlaying = playback.isPlaying
         }
     }
 }

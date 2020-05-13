@@ -11,7 +11,7 @@ import NotificationCenter
 import TextyKit
 
 extension Publishers {
-    class PlaySubscription<S: Subscriber>: Subscription where S.Input == Document.MetaData, S.Failure == Never {
+    class PlaySubscription<S: Subscriber>: Subscription where S.Input == Document.Playback, S.Failure == Never {
         private var subscriber: S?
 
         func request(_ demand: Subscribers.Demand) {
@@ -28,7 +28,7 @@ extension Publishers {
     }
 
     struct PlayPublisher: Publisher {
-        typealias Output = Document.MetaData
+        typealias Output = Document.Playback
         typealias Failure = Never
 
         func receive<S>(subscriber: S) where S : Subscriber, Self.Failure == S.Failure, Self.Output == S.Input {

@@ -14,5 +14,7 @@ extension Document {
         var currentSentence: Int
 
         var isPlaying: Bool
+
+        
     }
 }

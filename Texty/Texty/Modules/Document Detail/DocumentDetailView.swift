@@ -6,6 +6,7 @@
 //  Copyright © 2020 Kai Aldag. All rights reserved.
 //
 
+import UIKit
 import SwiftUI
 import Combine
 
@@ -13,6 +14,8 @@ struct DocumentDetailView: View {
     private var document: Binding<Document>
 
     @State fileprivate var verticalOffset: CGFloat = 0
+    @State fileprivate var isEditing = true
+    @State fileprivate var showDatePicker = false
 
     init(document: Binding<Document>) {
         self.document = document
@@ -25,48 +28,79 @@ struct DocumentDetailView: View {
 
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack {
-                    header
-                        .offset(y: verticalOffset)
-                    CirclePlayView()
-                        .frame(width: 80, height: 80)
-                        .offset(x: 0, y: -35 + verticalOffset)
+            ZStack {
+                ScrollView {
+                    VStack {
+                        // Header and play button
+                        header
+                            .offset(y: verticalOffset)
+                        CirclePlayView()
+                            .frame(width: 80, height: 80)
+                            .offset(x: 0, y: -35 + verticalOffset)
 
-                    HStack(alignment: .top, spacing: 5) {
+                        // Document Meta Data
+                        HStack(alignment: .top, spacing: 5) {
+                            VStack(alignment: .leading, spacing: 5) {
+                                if isEditing {
+                                    TextField("Author", text: document.metaData.author)
+                                    Button(action: {
+                                        withAnimation(.easeOut(duration: 0.15)) {
+                                            self.showDatePicker.toggle()
+                                        }
+                                    }, label: {
+                                        Text("Publication Date").foregroundColor(Color.secondaryLabel)
+
+                                    })
+                                } else {
+                                    Text(document.metaData.author.wrappedValue.isEmpty ? document.metaData.author.wrappedValue : "Untitled Author")
+                                    Text("\(DateFormatter.localizedString(from: document.metaData.releaseDate.wrappedValue, dateStyle: .medium, timeStyle: .none))")
+                                }
+                            }.padding(.leading, 10)
+                            Spacer(minLength: 35)
+                            VStack(alignment: .trailing, spacing: 5) {
+                                Text("PAGE# / \(document.metaData.pageCount.wrappedValue)")
+                                Text("Time Remaining")
+                            }.padding(.trailing, 10)
+                        }.offset(x: 0, y: -75 + verticalOffset)
+
+                        // Pages
                         VStack(alignment: .leading, spacing: 5) {
-                            Text(document.metaData.author.wrappedValue ?? "Untitled Author")
-                            Text("\(DateFormatter.localizedString(from: document.metaData.releaseDate.wrappedValue, dateStyle: .medium, timeStyle: .none))")
-                        }.padding(.leading, 10)
-                        Spacer(minLength: 35)
-                        VStack(alignment: .trailing, spacing: 5) {
-                            Text("PAGE# / \(document.metaData.pageCount.wrappedValue)")
-                            Text("Time Remaining")
-                        }.padding(.trailing, 10)
-                    }.offset(x: 0, y: -75 + verticalOffset)
+                            Text("Pages").font(.headline).padding(.leading, 10)
+                            PagesContentView(pages: document.pages)
+                                .frame(width: nil, height: 350, alignment: .leading)
 
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text("Pages").font(.headline)
-                        PagesContentView(pages: document.pages)
-                        
+                        }
                     }
+                    }
+                .offset(x: 0, y: -30)
+                if isEditing {
+                    VStack {
+                        Spacer()
+                        Group {
+                            Text("Published:")
+//                                .offset(x: 0, y: 10)
+                            DatePicker("",
+                                       selection: document.metaData.releaseDate,
+                                       displayedComponents: .date)
+                        }
+                        .background(Color.systemBackground)
+                        .offset(x: 0, y: showDatePicker ? 0 : 75)
+                    }.opacity(showDatePicker ? 1 : 0)
                 }
-            }.offset(x: 0, y: -50)
+            }
         }
         .navigationBarTitle(Text(document.metaData.title.wrappedValue ?? "Untitled Document"))
         .navigationBarItems(trailing: Button(action: {
-            print("edit mode")
+            withAnimation(.easeOut(duration: 0.2)) {
+                self.isEditing.toggle()
+            }
         }, label: {
             return Text("Edit")
         }))
-
-//            .onReceive(header.showingPublisher) { (isShowing) in
-//                if isShowing {
-//                    self.verticalOffset += 200
-//                } else {
-//                    self.verticalOffset -= 200
-//                }
-//        }
+        .edgesIgnoringSafeArea(.bottom)
+        .onTapGesture {
+            UIApplication.shared.endEditing()
+        }
     }
 
 

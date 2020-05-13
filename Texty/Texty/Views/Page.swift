@@ -30,10 +30,11 @@ struct Page: View {
             .minimumScaleFactor(0.8)
         }
         .padding(.all, 10)
-        .background(Color.black.opacity(0.9))
+        .background(Color(white: 0.1))
         .cornerRadius(8)
         .aspectRatio(6/9, contentMode: .fit)
         .shadow(radius: 2)
+        .colorScheme(.light)
     }
 }
 
