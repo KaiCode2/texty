@@ -24,4 +24,8 @@ public enum Constants {
     public enum Published {
         public static let metaData = "metaData"
     }
+
+    public enum Text {
+        public static let indent = "    "
+    }
 }

@@ -7,8 +7,11 @@
 //
 
 import SwiftUI
+import Combine
 
 internal struct CirclePlayView: View {
+
+    @State private var isPlaying = false
 
     var body: some View {
         ZStack {
@@ -22,7 +25,17 @@ internal struct CirclePlayView: View {
             .shadow(radius: 10)
                 .accessibility(label: Text("Play")).frame(minWidth: 60, idealWidth: 100, maxWidth: 100, minHeight: 60, idealHeight: 100, maxHeight: 100)
 
-            Image(systemName: "play.fill").resizable().aspectRatio(contentMode: .fit).frame(minWidth: 30, idealWidth: 40, maxWidth: 40, minHeight: 30, idealHeight: 40, maxHeight: 40).padding(.leading, 5).colorScheme(.dark)
+            (isPlaying ? Image(systemName: "pause.fill") : Image(systemName: "play.fill"))
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(minWidth: 30, idealWidth: 40, maxWidth: 40,
+                       minHeight: 30, idealHeight: 40, maxHeight: 40)
+                .padding(.leading, (isPlaying ? 0 : 5))
+                .colorScheme(.dark)
+        }.onTapGesture {
+            withAnimation(.easeOut(duration: 0.2)) {
+                self.isPlaying.toggle()
+            }
         }
     }
 }
