@@ -24,6 +24,8 @@ class HomeViewModel: ObservableObject {
         assigner = Publishers.Map(upstream: presenter.didChange) { (documents) -> [Document.MetaData] in
             return documents.map { (document) -> Document.MetaData in
                 return document.metaData
+            }.sorted { (lhs, rhs) -> Bool in
+                return lhs.releaseDate.timeIntervalSince1970 > rhs.releaseDate.timeIntervalSince1970
             }
         }.receive(on: RunLoop.main).assign(to: \.documentsMetadata, on: self)
     }

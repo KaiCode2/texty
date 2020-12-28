@@ -266,7 +266,6 @@
 			isa = PBXGroup;
 			children = (
 				ACAB2E9A244CEA3700EA0217 /* Scan Document */,
-				AC8F555B23EBAF3F00B62613 /* Edit Scan */,
 				AC8F555623EBAEA200B62613 /* Document Detail */,
 				AC8F555523EBAE9800B62613 /* Home */,
 			);
@@ -292,13 +291,6 @@
 				ACAB2E9B244CEA6300EA0217 /* Subviews */,
 			);
 			path = "Document Detail";
-			sourceTree = "<group>";
-		};
-		AC8F555B23EBAF3F00B62613 /* Edit Scan */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Edit Scan";
 			sourceTree = "<group>";
 		};
 		AC8F556423EBB40500B62613 /* Coordinators */ = {
@@ -479,7 +471,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1220;
 				ORGANIZATIONNAME = "Kai Aldag";
 				TargetAttributes = {
 					AC31DFE422AA45F7009E4FA5 = {
@@ -660,6 +652,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -721,6 +714,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

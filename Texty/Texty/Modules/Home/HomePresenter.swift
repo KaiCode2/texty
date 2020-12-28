@@ -93,7 +93,7 @@ internal class HomePresenter: HomeControllerType, ObservableObject {
             try persistenceInteractor.deleteDocument(document: document)
             documents.removeAll(where: { return $0.id == document.id })
         } catch let error {
-
+            print(error)
         }
     }
 
