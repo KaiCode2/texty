@@ -21,11 +21,6 @@ struct DocumentDetailView: View {
         self.document = document
     }
 
-    private var header: DocumentHeaderView {
-        let header = DocumentHeaderView(image: document.metaData.coverImage.wrappedValue)
-        return header
-    }
-
     var body: some View {
         NavigationView {
             ZStack {
@@ -95,7 +90,7 @@ struct DocumentDetailView: View {
                 self.isEditing.toggle()
             }
         }, label: {
-            return Text("Edit")
+            return editText
         }))
         .edgesIgnoringSafeArea(.bottom)
         .onTapGesture {
@@ -110,6 +105,41 @@ struct DocumentDetailView: View {
         } else {
             return AnyView(Image(systemName: "camera").aspectRatio(1, contentMode: .fit))
         }
+    }
+}
+
+/// MARK: View extension
+fileprivate extension DocumentDetailView {
+    
+    var header: DocumentHeaderView {
+        let header = DocumentHeaderView(image: document.metaData.coverImage.wrappedValue)
+        return header
+    }
+    
+    var editText: Text {
+        if !isEditing {
+            return Text("Edit")
+        } else {
+            return Text("Done")
+        }
+    }
+    
+    ///Note: Currently, neither of the below are in use
+    var title: AnyView {
+        if !isEditing {
+            return AnyView(Text(document.metaData.title.wrappedValue ?? "Untitled Document"))
+        } else {
+            return AnyView(TextField("", text: titleStringBinding))
+        }
+    }
+    
+    var titleStringBinding: Binding<String> {
+        return Binding { () -> String in
+            return document.metaData.title.wrappedValue ?? "Untitled Document"
+        } set: { (text) in
+            document.metaData.title.wrappedValue = text
+        }
+
     }
 }
 
