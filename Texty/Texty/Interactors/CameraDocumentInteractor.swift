@@ -66,7 +66,16 @@ private extension CameraDocumentInteractor {
                             return textString + " " + line
                         }
                     }
-                    self.document.add(pageString: newPageString)
+                    // Check if last line contains numbers. If so, add new string - minus the last line of text - and page number. Else, add just new string
+                    if let lastLine = requestResults.last?.topCandidates(1).first,
+                       let pageNumberString = lastLine.string.components(separatedBy: CharacterSet.decimalDigits.inverted).filter({ $0.count != 0 }).first,
+                       let pageNumber = Int(pageNumberString) {
+                        var updatedString = newPageString
+                        updatedString.removeLast(lastLine.string.count)
+                        self.document.add(pageString: updatedString, number: pageNumber, image: nil)
+                    } else {
+                        self.document.add(pageString: newPageString)
+                    }
                 }
             }
         })
