@@ -14,7 +14,7 @@ struct DocumentDetailView: View {
     private var document: Binding<Document>
 
     @State fileprivate var verticalOffset: CGFloat = 0
-    @State fileprivate var isEditing = true
+    @State fileprivate var isEditing = false
     @State fileprivate var showDatePicker = false
 
     init(document: Binding<Document>) {
@@ -32,7 +32,6 @@ struct DocumentDetailView: View {
                         CirclePlayView()
                             .frame(width: 80, height: 80)
                             .offset(x: 0, y: -35 + verticalOffset)
-
                         // Document Meta Data
                         HStack(alignment: .top, spacing: 5) {
                             VStack(alignment: .leading, spacing: 5) {
@@ -44,10 +43,9 @@ struct DocumentDetailView: View {
                                         }
                                     }, label: {
                                         Text("Publication Date").foregroundColor(Color.secondaryLabel)
-
                                     })
                                 } else {
-                                    Text(document.metaData.author.wrappedValue.isEmpty ? document.metaData.author.wrappedValue : "Untitled Author")
+                                    Text(!document.metaData.author.wrappedValue.isEmpty ? document.metaData.author.wrappedValue : "Untitled Author")
                                     Text("\(DateFormatter.localizedString(from: document.metaData.releaseDate.wrappedValue, dateStyle: .medium, timeStyle: .none))")
                                 }
                             }.padding(.leading, 10)
@@ -57,23 +55,23 @@ struct DocumentDetailView: View {
                                 Text("Time Remaining")
                             }.padding(.trailing, 10)
                         }.offset(x: 0, y: -75 + verticalOffset)
-
+                        
                         // Pages
                         VStack(alignment: .leading, spacing: 5) {
                             Text("Pages").font(.headline).padding(.leading, 10)
                             PagesContentView(pages: document.pages)
                                 .frame(width: nil, height: 350, alignment: .leading)
-
+                            
                         }
                     }
-                    }
+                }
                 .offset(x: 0, y: -30)
                 if isEditing {
                     VStack {
                         Spacer()
                         Group {
                             Text("Published:")
-//                                .offset(x: 0, y: 10)
+                            //                                .offset(x: 0, y: 10)
                             DatePicker("",
                                        selection: document.metaData.releaseDate,
                                        displayedComponents: .date)
@@ -84,7 +82,7 @@ struct DocumentDetailView: View {
                 }
             }
         }
-        .navigationBarTitle(Text(document.metaData.title.wrappedValue ?? "Untitled Document"))
+        .navigationBarTitle(Text(titleString))
         .navigationBarItems(trailing: Button(action: {
             withAnimation(.easeOut(duration: 0.2)) {
                 self.isEditing.toggle()
@@ -111,9 +109,15 @@ struct DocumentDetailView: View {
 /// MARK: View extension
 fileprivate extension DocumentDetailView {
     
-    var header: DocumentHeaderView {
-        let header = DocumentHeaderView(image: document.metaData.coverImage.wrappedValue)
-        return header
+    var header: some View {
+        ZStack {
+            DocumentHeaderView(image: document.metaData.coverImage.wrappedValue)
+            if isEditing {
+                TextField("Document Title", text: document.metaData.title)
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+            }
+        }
     }
     
     var editText: Text {
@@ -124,22 +128,14 @@ fileprivate extension DocumentDetailView {
         }
     }
     
-    ///Note: Currently, neither of the below are in use
-    var title: AnyView {
+    var titleString: String {
         if !isEditing {
-            return AnyView(Text(document.metaData.title.wrappedValue ?? "Untitled Document"))
+            return !document.metaData.title.wrappedValue.isEmpty ?
+                document.metaData.title.wrappedValue :
+                "Untitled Document"
         } else {
-            return AnyView(TextField("", text: titleStringBinding))
+            return ""
         }
-    }
-    
-    var titleStringBinding: Binding<String> {
-        return Binding { () -> String in
-            return document.metaData.title.wrappedValue ?? "Untitled Document"
-        } set: { (text) in
-            document.metaData.title.wrappedValue = text
-        }
-
     }
 }
 

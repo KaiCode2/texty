@@ -78,7 +78,7 @@ struct Document: Identifiable {
         typealias ID = UUID
         var id: UUID
 
-        var title: String?
+        var title: String
         var author: String
         var releaseDate: Date
         var pageCount: Int
@@ -87,7 +87,7 @@ struct Document: Identifiable {
 
 
         /// MARK: -- Initializers and Setters --
-        init(id: UUID = UUID(), title: String? = nil, author: String = "", releaseDate: Date = Date(), pageCount: Int = 0, coverImage: UIImage? = nil) {
+        init(id: UUID = UUID(), title: String = "", author: String = "", releaseDate: Date = Date(), pageCount: Int = 0, coverImage: UIImage? = nil) {
             self.id = id
             self.title = title
             self.author = author
@@ -97,17 +97,17 @@ struct Document: Identifiable {
         }
 
         static func empty() -> MetaData {
-            return MetaData(id: UUID(), title: nil, author: "", releaseDate: Date(), pageCount: 0, coverImage: nil)
+            return MetaData(id: UUID(), title: "", author: "", releaseDate: Date(), pageCount: 0, coverImage: nil)
         }
 
         static func fromDict(dict: [String: Any?]) throws -> MetaData {
             guard let id = dict[Document.propertyKeys[0]] as? UUID,
+                  let title = dict[Document.propertyKeys[1]] as? String,
                 let author = dict[Document.propertyKeys[2]] as? String,
                 let date = dict[Document.propertyKeys[3]] as? Date,
                 let pageCount = dict[Document.propertyKeys[4]] as? Int else {
                 throw LocalError.invalidInput
             }
-            let title = dict[Document.propertyKeys[1]] as? String
 
             var coverImage: UIImage? = nil
             if let imageData = dict[Document.propertyKeys[5]] as? Data,
@@ -121,13 +121,12 @@ struct Document: Identifiable {
         func toDict() -> [String: Any] {
             var dict: [String: Any] = [
                 Document.propertyKeys[0]: id,
+                Document.propertyKeys[1]: title,
                 Document.propertyKeys[2]: author,
                 Document.propertyKeys[3]: releaseDate,
                 Document.propertyKeys[4]: pageCount
             ]
-            if let title = title {
-                dict[Document.propertyKeys[1]] = title
-            }
+
             if let coverImageData = coverImage?.pngData() {
                 dict[Document.propertyKeys[5]] = coverImageData
             }

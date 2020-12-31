@@ -10,50 +10,50 @@ import SwiftUI
 
 internal struct HomeView: View {
     typealias PresenterType = HomeControllerType //Any<HomePresenterType, HomeViewSupplier>
-//    private var viewPresenter: HomeViewSupplierType
+    //    private var viewPresenter: HomeViewSupplierType
     private var presenter: PresenterType
-
+    
     @ObservedObject var viewModel: HomeViewModel
     
     @State fileprivate var isShowingScan = false
     @State fileprivate var userSelectedDeleteDocument: Document.MetaData? = nil
-
+    
     init(presenter: PresenterType, viewModel: HomeViewModel) {
         self.presenter = presenter
         self.viewModel = viewModel
     }
-
+    
     var body: some View {
         NavigationView {
             List {
                 ForEach(viewModel.documentsMetadata, id: \.id) { (document)  in
                     NavigationLink(destination: DocumentDetailView(document: self.presenter.document(fromMetaData: document))) {
-                        DocumentRowView(metadata: document)
-                        .contextMenu {
-                            Button(action: {
-                                self.presenter.playAudio(forDocument: document)
-                            }) {
-                                HStack {
-                                    Text(NSLocalizedString("Play", comment: "Play audio"))
-                                    Image(systemName: "play.fill")
+                        DocumentRowView(metadata: self.presenter.document(fromMetaData: document).metaData)
+                            .contextMenu {
+                                Button(action: {
+                                    self.presenter.playAudio(forDocument: document)
+                                }) {
+                                    HStack {
+                                        Text(NSLocalizedString("Play", comment: "Play audio"))
+                                        Image(systemName: "play.fill")
+                                    }
+                                }
+                                Button(action: {
+                                    self.userSelectedDeleteDocument = document
+                                }) {
+                                    HStack {
+                                        Text(NSLocalizedString("Delete", comment: "Delete Document"))
+                                        Image(systemName: "trash.fill")
+                                    }
                                 }
                             }
-                            Button(action: {
-                                self.userSelectedDeleteDocument = document
-                            }) {
-                                HStack {
-                                    Text(NSLocalizedString("Delete", comment: "Delete Document"))
-                                    Image(systemName: "trash.fill")
-                                }
-                            }
-                        }
                     }
                 }
                 .onDelete { (indexSet) in
                     guard let index = indexSet.first,
-                        index < self.viewModel.documentsMetadata.count,
-                        indexSet.count == 1 else {
-                            return
+                          index < self.viewModel.documentsMetadata.count,
+                          indexSet.count == 1 else {
+                        return
                     }
                     self.userSelectedDeleteDocument = self.viewModel.documentsMetadata[index]
                 }
@@ -85,7 +85,7 @@ internal struct HomeView: View {
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
-
+    
     static var previews: some View {
         // TODO: add injected view models
         HomeWireframe(delegate: nil).view

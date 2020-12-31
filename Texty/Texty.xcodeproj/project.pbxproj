@@ -52,6 +52,7 @@
 		ACB9C58A23E2965800BEB6A2 /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB9C58923E2965800BEB6A2 /* RootCoordinator.swift */; };
 		ACB9C59223E8C63B00BEB6A2 /* CameraDocumentInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB9C59123E8C63B00BEB6A2 /* CameraDocumentInteractor.swift */; };
 		ACB9C59423E8C6C200BEB6A2 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACB9C59323E8C6C200BEB6A2 /* Document.swift */; };
+		ACD7D206259D860B0098DC4D /* ImageTextParsingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD7D205259D860B0098DC4D /* ImageTextParsingService.swift */; };
 		ACEBC4BF24398E6100F3AE88 /* Document+ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEBC4BE24398E6100F3AE88 /* Document+ManagedObject.swift */; };
 		ACEBC4C12439B17C00F3AE88 /* DocumentImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEBC4C02439B17C00F3AE88 /* DocumentImageView.swift */; };
 		ACFEDDE62446EDA0006E90B0 /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACFEDDE52446EDA0006E90B0 /* LazyView.swift */; };
@@ -131,6 +132,7 @@
 		ACB9C58923E2965800BEB6A2 /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		ACB9C59123E8C63B00BEB6A2 /* CameraDocumentInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraDocumentInteractor.swift; sourceTree = "<group>"; };
 		ACB9C59323E8C6C200BEB6A2 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		ACD7D205259D860B0098DC4D /* ImageTextParsingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTextParsingService.swift; sourceTree = "<group>"; };
 		ACEBC4BE24398E6100F3AE88 /* Document+ManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Document+ManagedObject.swift"; sourceTree = "<group>"; };
 		ACEBC4C02439B17C00F3AE88 /* DocumentImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentImageView.swift; sourceTree = "<group>"; };
 		ACFEDDE52446EDA0006E90B0 /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				AC8F556423EBB40500B62613 /* Coordinators */,
 				AC16C1B323FAABF300C1EF40 /* Views */,
 				AC8F555423EBAE7900B62613 /* Modules */,
+				ACD7D204259D85A10098DC4D /* Services */,
 				AC8F556623EBB41D00B62613 /* Interactors */,
 				AC8F556723EBB43300B62613 /* Models */,
 				AC8F556523EBB41000B62613 /* Supporting */,
@@ -385,6 +388,14 @@
 				ACAE468F2427755C002F1506 /* Info.plist */,
 			);
 			path = TextyKit;
+			sourceTree = "<group>";
+		};
+		ACD7D204259D85A10098DC4D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				ACD7D205259D860B0098DC4D /* ImageTextParsingService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		ACEBC4BD24396D2500F3AE88 /* Core Data */ = {
@@ -546,6 +557,7 @@
 				AC08437824050C8700FF80D2 /* HomeViewModel.swift in Sources */,
 				AC8F556123EBB1F000B62613 /* HomePresenter.swift in Sources */,
 				ACEBC4BF24398E6100F3AE88 /* Document+ManagedObject.swift in Sources */,
+				ACD7D206259D860B0098DC4D /* ImageTextParsingService.swift in Sources */,
 				AC08436F23FCCDE100FF80D2 /* DocumentDetailView.swift in Sources */,
 				AC8F555323EAAFB100B62613 /* PersistenceInteractor.swift in Sources */,
 				ACB9C58A23E2965800BEB6A2 /* RootCoordinator.swift in Sources */,

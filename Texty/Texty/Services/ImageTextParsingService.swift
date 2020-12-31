@@ -1,41 +1,30 @@
 //
-//  CameraDocumentInteractor.swift
+//  ImageTextParsingService.swift
 //  Texty
 //
-//  Created by Kai Aldag on 2020-02-03.
+//  Created by Kai Aldag on 2020-12-30.
 //  Copyright © 2020 Kai Aldag. All rights reserved.
 //
 
 import Vision
 import VisionKit
 
-protocol CameraDocumentInteractorDelegate {
-    func didFinish(withDocument document: Document)
-}
-
-internal final class CameraDocumentInteractor: NSObject, VNDocumentCameraViewControllerDelegate {
-    var delegate: CameraDocumentInteractorDelegate?
-    private var document: Document
-
-    init(delegate: CameraDocumentInteractorDelegate?, document: Document? = nil) {
-        self.delegate = delegate
-        self.document = document ?? Document(pages: [], metaData: Document.MetaData.empty())
-    }
-
-    func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
-        controller.dismiss(animated: true) {
-                        DispatchQueue.global(qos: .userInitiated).async {
-                            for pageNumber in 0 ..< scan.pageCount {
-                                let image = scan.imageOfPage(at: pageNumber)
-                                self.processImage(image: image)
-                            }
-                            self.delegate?.didFinish(withDocument: self.document)
-                        }
-                    }
+internal struct ImageTextParsingService {
+    
+    /// Parses a visionDocument object and returns a Texty compliant Document object. Work is done asynchronously
+    func parse(visionDocument: VNDocumentCameraScan) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            for pageNumber in 0 ..< visionDocument.pageCount {
+                let image = visionDocument.imageOfPage(at: pageNumber)
+                self.processImage(image: image)
+            }
+            /// TODO: use publisher to publish results of the parsing
+//            self.delegate?.didFinish(withDocument: self.document)
+        }
     }
 }
 
-private extension CameraDocumentInteractor {
+private extension ImageTextParsingService {
     func processImage(image: UIImage) {
         guard let cgImage = image.cgImage else {
             print("Failed to get cgimage from input image")
@@ -73,9 +62,9 @@ private extension CameraDocumentInteractor {
                        let pageNumber = Int(pageNumberString) {
                         var updatedString = newPageString
                         updatedString.removeLast(lastLine.string.count)
-                        self.document.add(pageString: updatedString, number: pageNumber, image: nil)
+//                        self.document.add(pageString: updatedString, number: pageNumber, image: nil)
                     } else {
-                        self.document.add(pageString: newPageString)
+//                        self.document.add(pageString: newPageString)
                     }
                 }
             }
